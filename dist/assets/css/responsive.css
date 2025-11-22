@@ -219,14 +219,29 @@
     .add-btn {
         padding: 5px 8px;
     }
-    .btn-comman{
+
+    .btn-comman {
         height: 35px;
         font-size: 12px;
         line-height: 30px;
         padding: 0 10px;
     }
-    .btn-comman img{
+
+    .btn-comman img {
         width: 16px;
+    }
+
+    .product-details-main-img,
+    .product-details-main-img-wrapper {
+        height: 250px;
+    }
+
+    .product-details-img {
+        height: 80px;
+    }
+
+    .product-details-img.last::after {
+        line-height: 80px;
     }
 }
 
@@ -254,4 +269,7 @@
         flex-direction: column;
         gap: 6px;
     } */
+    .modal-width {
+        max-width: auto;
+    }
 }

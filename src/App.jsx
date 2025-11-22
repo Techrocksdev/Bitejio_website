@@ -12,9 +12,8 @@ import ScrollToTop from "./commonComponents/scrollToTop";
 import ProtectedRoute from "./commonComponents/protectedRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Home from "./components/home";
 
-// const Login = lazy(() => import("./authComponents/login"));
+const Home = lazy(() => import("./homeComponents/home"));
 // const ForgotPassword = lazy(() => import("./authComponents/forgotPassword"));
 // const Verification = lazy(() => import("./authComponents/verification"));
 // const ResetPassword = lazy(() => import("./authComponents/resetPassword"));
@@ -71,8 +70,8 @@ function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    if (!localStorage.getItem("uid-bit-admin")) {
-      localStorage.setItem("uid-bit-admin", uuidv4());
+    if (!localStorage.getItem("uid-bit-user")) {
+      localStorage.setItem("uid-bit-user", uuidv4());
     }
 
     const handleOnline = () => setIsOnline(true);
@@ -113,7 +112,8 @@ function App() {
               </Route>
 
               <Route path="/" element={<Navigate to="/login" replace />} />
-              <Route path="*" element={<Navigate to="/login" replace />} /> */}
+               */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
         </Router>

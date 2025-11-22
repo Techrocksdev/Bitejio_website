@@ -1,5 +1,6 @@
 // File: src/components/OTPTimer.jsx
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const OTPTimer = ({
   seconds = 30,
@@ -50,7 +51,8 @@ const OTPTimer = ({
           {text} {formatTime()}
         </span>
       ) : (
-        <button
+        <Link
+          to=""
           onClick={handleResend}
           style={{
             background: "none",
@@ -63,7 +65,7 @@ const OTPTimer = ({
           }}
         >
           {resendButtonText}
-        </button>
+        </Link>
       )}
     </div>
   );

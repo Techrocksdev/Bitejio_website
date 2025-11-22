@@ -1,155 +1,11 @@
 import React from "react";
+import Header from "./header";
+import Category from "./category";
 
 function Home() {
   return (
-    <div className="overflow-x-hidden">
-      <header className="header">
-        <div className="container">
-          <div className="header-wrapper">
-            <div className="row g-3 align-items-center">
-              <div className="col-3 mb-md-4 mb-lg-0 col-md-6 col-lg-2 col-xl-1">
-                {/* Logo */}
-                <div className="logo">
-                  <img src="assets/image/project/logo.svg" alt="Bitezio Logo" />
-                </div>
-              </div>
-              <div className="col-12 order-3 order-md-3 order-xl-2 col-md-6 col-lg-3 col-xl-3">
-                {/* Location */}
-                <div className="location dropdown">
-                  <button
-                    className="btn btn-light dropdown-toggle d-flex gap-2 align-items-center justify-content-between"
-                    type="button"
-                    id="locationDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <div className="d-flex gap-2 align-items-center">
-                      <span className="icon">
-                        <img src="assets/image/icons/MapPin.svg" alt="" />
-                      </span>
-                      B block Street no. 10, Surajmal
-                    </div>
-                  </button>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="locationDropdown"
-                  >
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        B block Street no. 10, Surajmal
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        Sector 21, Noida
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        Connaught Place, Delhi
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="col-12 order-4 order-md-4 order-xl-3 col-md-6 col-lg-3 col-xl-4">
-                {/* Search */}
-                <div className="search-box">
-                  <input
-                    type="text"
-                    placeholder="Discover restaurants, cuisines, or dishes"
-                    id="search"
-                  />
-                  <span className="search-icon">
-                    <img src="assets/image/icons/MagnifyingGlass.svg" alt="" />
-                  </span>
-                  <div
-                    className="search-dropdown-content d-none"
-                    id="search-dropdown"
-                  >
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-9 text-end mb-md-4 mb-lg-0 order-2 order-md-2 order-xl-4 col-md-6 col-lg-3 col-xl-4">
-                {/* Auth Buttons */}
-                <div className="auth">
-                  <a href="#" className="login">
-                    Login
-                  </a>
-                  <a href="#" className="signup btn-comman">
-                    Sign up
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <>
+      <Header />
       <section
         className="banner wow animate__animated animate__zoomIn"
         data-wow-delay="0.3s"
@@ -180,142 +36,7 @@ function Home() {
           </div>
         </div>
       </section>
-      <section
-        className="top-category wow animate__animated animate__fadeInUp"
-        data-wow-delay="0.2s"
-      >
-        <div className="container comman-spacing-top-bottom">
-          <h2 className="heading">Top Categories</h2>
-          <div className="row justify-content-center g-5">
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/pizza.svg" alt="" />
-              </div>
-              <h2 className="category-text">Pizza</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/burger.svg" alt="" />
-              </div>
-              <h2 className="category-text">Burger</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/paratha.svg" alt="" />
-              </div>
-              <h2 className="category-text">Paratha</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/north-indian.svg" alt="" />
-              </div>
-              <h2 className="category-text">North Indian</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/cake.svg" alt="" />
-              </div>
-              <h2 className="category-text">Cake</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/ice-creame.svg" alt="" />
-              </div>
-              <h2 className="category-text">Ice Cream</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/biryani.svg" alt="" />
-              </div>
-              <h2 className="category-text">Biryani</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/chinese.svg" alt="" />
-              </div>
-              <h2 className="category-text">Chinese</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/kulcha.svg" alt="" />
-              </div>
-              <h2 className="category-text">Kulcha</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/noodles.svg" alt="" />
-              </div>
-              <h2 className="category-text">Noodles</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/shake.svg" alt="" />
-              </div>
-              <h2 className="category-text">Shake</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/shawarma.svg" alt="" />
-              </div>
-              <h2 className="category-text">Shawarma</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/non-veg.svg" alt="" />
-              </div>
-              <h2 className="category-text">Non Veg</h2>
-            </div>
-            <div className="col-auto">
-              <div
-                className="category-img wow animate__animated animate__zoomIn"
-                data-wow-delay="0.2s"
-              >
-                <img src="assets/image/products/soup.svg" alt="" />
-              </div>
-              <h2 className="category-text">Soup</h2>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Category />
       <section className="most-popular">
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center justify-content-between mb-5">
@@ -838,8 +559,72 @@ function Home() {
           <div className="footer-copy-right">© 2025 Bitezio Pvt ltd</div>
         </div>
       </footer>
-    </div>
+      {/* Pincode Modal */}
+      <div
+        className="modal fade"
+        id="areaModal"
+        tabIndex={-1}
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered modal-width">
+          <div className="modal-content text-center p-4">
+            <img
+              src="assets/image/icons/bike.svg"
+              alt="Delivery"
+              width={100}
+              className="mx-auto mb-3"
+            />
+            <h5 className="mb-3 modal-heading">
+              Let’s find out if we can bring the food to you{" "}
+            </h5>
+            <input
+              type="text"
+              className="form-control border border-2 mb-3"
+              placeholder="Enter Pin Code"
+            />
+            <button className="comman-btn-main rounded-pill mx-auto">
+              Check My Area
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* Notify Me Modal  */}
+      <div
+        className="modal fade"
+        id="notifyModal"
+        tabIndex={-1}
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered modal-width">
+          <div className="modal-content text-center p-4">
+            <img
+              src="assets/image/icons/bike.svg"
+              alt="Delivery"
+              width={100}
+              className="mx-auto mb-3"
+            />
+            <h5 className="mb-3 modal-heading">
+              Not in your area yet, but we’ll be there soon 🚀
+            </h5>
+            <input
+              type="text"
+              className="form-control border border-2 mb-3"
+              placeholder="Enter Pin Code"
+            />
+            <button className="comman-btn-main rounded-pill mx-auto">
+              Notify Me
+            </button>
+            <a
+              href
+              className="text-center text-center text-dark text-decoration-underline"
+            >
+              Browse Menu
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
-export default Home;
+export default React.memo(Home);
