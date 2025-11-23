@@ -115,7 +115,7 @@ a {
 
 html,
 body {
-  background-color: var(--canvas-body);
+  /* background-color: var(--canvas-body); */
   font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
   scroll-behavior: auto !important;
@@ -176,11 +176,11 @@ body {
 }
 
 .slide-btn.prev {
-  left: -30px;
+  left: -70px;
 }
 
 .slide-btn.next {
-  right: -30px;
+  right: -70px;
 }
 
 .heading {

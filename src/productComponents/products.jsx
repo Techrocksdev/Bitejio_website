@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { getCategory } from "../apiServices/home/homeHttpService";
+import { getCategory, getProduct } from "../apiServices/home/homeHttpService";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -24,28 +24,49 @@ function Products() {
   });
   const results = response?.results?.categories;
 
-  const SampleNextArrow = (props) => {
-    const { className, style, onClick } = props;
+  const {
+    data: response2,
+    isLoading2,
+    refetch,
+  } = useQuery({
+    queryKey: ["productList"],
+    queryFn: async () => {
+      const formData = {
+        page: 1,
+        pageSize: 1000,
+        search: "",
+      };
+      return getProduct(formData);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const products = response2?.results?.products || [];
+
+  const SampleNextArrow = ({ onClick, currentSlide, slideCount }) => {
+    const isDisabled = currentSlide === slideCount - 8;
     return (
       <button
-        className={`${className} slide-btn next`}
-        style={{ ...style }}
-        onClick={onClick}
+        className={` slide-btn next ${isDisabled ? "slick-disabled" : ""}`}
+        onClick={!isDisabled ? onClick : undefined}
+        disabled={isDisabled}
       >
-        <img src="../assets/image/icons/angle-right.svg" alt="" />
+        <img src="../assets/image/icons/angle-right.svg" alt="Next" />
       </button>
     );
   };
 
-  const SamplePrevArrow = (props) => {
-    const { className, style, onClick } = props;
+  const SamplePrevArrow = ({ onClick, currentSlide }) => {
+    const isDisabled = currentSlide === 0;
     return (
       <button
-        className={`${className}slide-btn prev`}
-        style={{ ...style }}
-        onClick={onClick}
+        className={`slide-btn prev ${isDisabled ? "slick-disabled" : ""}`}
+        onClick={!isDisabled ? onClick : undefined}
+        disabled={isDisabled}
       >
-        <img src="../assets/image/icons/angle-left.svg" alt="" />
+        <img src="../assets/image/icons/angle-left.svg" alt="Previous" />
       </button>
     );
   };
@@ -57,8 +78,39 @@ function Products() {
     slidesToShow: 8,
     slidesToScroll: 4,
     arrows: true,
+    centerPadding: "20px",
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 6,
+          slidesToScroll: 3,
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
@@ -80,17 +132,23 @@ function Products() {
             )}
           </div>
           <div className="position-relative">
-            <div className="category-items-tabs px-0">
+            <div
+              className={
+                isLoading
+                  ? "category-items-tabs d-flex gap-4 px-0"
+                  : "category-items-tabs"
+              }
+            >
               {isLoading ? (
-                [...Array(30)].map(() => (
-                  <div>
+                [...Array(20)].map((_, index) => (
+                  <div key={index}>
                     <Skeleton height={42} width={100} />
                   </div>
                 ))
               ) : (
                 <Slider {...sliderSettings}>
                   {results?.map((item, index) => (
-                    <div className="category-items-tabs-items">
+                    <div key={index} className="category-items-tabs-items ">
                       <Link to="">{item.name_en}</Link>
                     </div>
                   ))}
@@ -98,502 +156,102 @@ function Products() {
               )}
             </div>
           </div>
-          <div className="row g-4">
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img src="../assets/image/products/pizza-p.svg" alt="" />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Margherita Pizza</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Mario’s Kitchen</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
+          <div className="row g-4 ">
+            {isLoading2 || isLoading ? (
+              <>
+                {[...Array(6)].map((_, index) => (
+                  <div className="col-md-4 col-lg-4 col-xl-4" key={index}>
+                    <a>
+                      <div
+                        className="custom-card wow animate__animated animate__fadeInUp"
+                        data-wow-delay="0.2s"
+                      >
+                        <div className="custom-card-header">
+                          <Skeleton />
                         </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
+                        <div className="custom-card-body">
+                          <h2>
+                            <Skeleton />
+                          </h2>
+                          <div>
+                            <Skeleton style={{ width: "70%" }} />
                           </div>
-                        </button>
+                          <div className="mt-4">
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex align-items-center gap-2 w-100 ">
+                                <p className="text w-100">
+                                  <Skeleton style={{ width: "100%" }} />
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                ))}
+              </>
+            ) : products?.length ? (
+              products?.map((item, index) => (
+                <div key={item._id} className="col-md-4 col-lg-4 col-xl-4">
+                  <Link to="">
+                    <div
+                      className="custom-card wow animate__animated animate__fadeInUp"
+                      data-wow-delay="0.2s"
+                    >
+                      <div className="custom-card-header">
+                        <img src={item?.images?.[0]} alt="" />
+                      </div>
+                      <div className="custom-card-body">
+                        <h2>{item.name_en}</h2>
+                        <div className="d-flex gap-2 align-items-center">
+                          <img
+                            src="../assets/image/icons/Star.svg"
+                            className="star"
+                            alt=""
+                          />
+                          <p className="text">4.8</p>
+                          <p className="text">Mario’s Kitchen</p>
+                        </div>
+                        <div className="mt-4">
+                          <div className="d-flex justify-content-between">
+                            <div className="d-flex align-items-center gap-2">
+                              <img
+                                src="../assets/image/icons/watch.svg"
+                                alt=""
+                              />
+                              <p className="text">30-40 min</p>
+                            </div>
+                            <button className="comman-btn-main w-fit">
+                              <div className="d-flex gap-2 align-items-center h-100">
+                                <img
+                                  src="../assets/image/icons/plus.svg"
+                                  alt=""
+                                />
+                                Add
+                              </div>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Chicken-Biryani-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Chicken Biryani</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Spice Garden</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Shahi-Paneer-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Shahi Paneer</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Punjabi Shan</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Malai-Kofta-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Malai Kofta</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Punjabi Shan</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img src="../assets/image/products/pizza-p.svg" alt="" />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Margherita Pizza</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Mario’s Kitchen</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Chicken-Biryani-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Chicken Biryani</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Spice Garden</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Shahi-Paneer-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Shahi Paneer</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Punjabi Shan</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Malai-Kofta-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Malai Kofta</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Punjabi Shan</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img src="../assets/image/products/pizza-p.svg" alt="" />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Margherita Pizza</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Mario’s Kitchen</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Chicken-Biryani-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Chicken Biryani</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Spice Garden</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Shahi-Paneer-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Shahi Paneer</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Punjabi Shan</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-4 col-xl-4">
-              <a href="product-details.html">
-                <div
-                  className="custom-card wow animate__animated animate__fadeInUp"
-                  data-wow-delay="0.2s"
-                >
-                  <div className="custom-card-header">
-                    <img
-                      src="../assets/image/products/Malai-Kofta-p.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="custom-card-body">
-                    <h2>Malai Kofta</h2>
-                    <div className="d-flex gap-2 align-items-center">
-                      <img
-                        src="../assets/image/icons/Star.svg"
-                        className="star"
-                        alt=""
-                      />
-                      <p className="text">4.8</p>
-                      <p className="text">.</p>
-                      <p className="text">Punjabi Shan</p>
-                    </div>
-                    <div className="mt-4">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src="../assets/image/icons/watch.svg" alt="" />
-                          <p className="text">30-40 min</p>
-                        </div>
-                        <button className="comman-btn-main w-fit">
-                          <div className="d-flex gap-2 align-items-center h-100">
-                            <img src="../assets/image/icons/plus.svg" alt="" />
-                            Add
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
+              ))
+            ) : (
+              <div className="mt-5 no-data mx-auto d-flex flex-column justify-content-center align-items-center">
+                <img
+                  src="../assets/image/products/noData.avif"
+                  alt="nodata"
+                  loading="lazy"
+                />
+                <p>
+                  Uh-oh! Looks like the product you are trying to access,
+                  <br />
+                  doesn't exist. Please start afresh.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -68,3 +68,17 @@ export async function verifyOTP(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+
+export async function getProduct(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/products/getProduct`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
