@@ -2,7 +2,11 @@ import React, { useCallback, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { sendOtpSignup, userLogin } from "../apiServices/home/homeHttpService";
+import {
+  sendOtpSignup,
+  userLogin,
+  verifyOTP,
+} from "../apiServices/home/homeHttpService";
 import OTPTimer from "../commonComponents/OTPTimer";
 import { RotatingLines } from "react-loader-spinner";
 import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
@@ -74,13 +78,10 @@ function Header() {
       otp: otp,
       countryCode: watch("phoneNumber").countryCode,
       phoneNumber: watch("phoneNumber").phoneNumber,
-      fcmToken: localStorage.getItem("fcmTokenBit"),
-      deviceId: localStorage.getItem("uid-bit-user"),
-      deviceOS: "web",
     };
 
     try {
-      const response = await userLogin(formData);
+      const response = await verifyOTP(formData);
 
       if (!response.error) {
         localStorage.setItem("token-bit-user", response.results.token);

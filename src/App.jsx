@@ -14,24 +14,17 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Home = lazy(() => import("./homeComponents/home"));
-// const ForgotPassword = lazy(() => import("./authComponents/forgotPassword"));
-// const Verification = lazy(() => import("./authComponents/verification"));
-// const ResetPassword = lazy(() => import("./authComponents/resetPassword"));
-// const Dashboard = lazy(() => import("./authComponents/dashboard"));
-// const Category = lazy(() => import("./authComponents/category"));
-// const Users = lazy(() => import("./authComponents/users"));
-// const Merchants = lazy(() => import("./authComponents/merchants"));
-// const Orders = lazy(() => import("./authComponents/orders"));
+const Products = lazy(() => import("./productComponents/products"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 2 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      staleTime: 0,
+      cacheTime: 10 * 60 * 1000,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
       refetchOnReconnect: true,
-      retry: 1,
+      retry: 2,
     },
   },
 });
@@ -99,20 +92,8 @@ function App() {
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Home />} />
-              {/*<Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/verification" element={<Verification />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-
-              <Route element={<ProtectedRoute />}>
-                <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/categories" element={<Category />} />
-                <Route path="/admin/users" element={<Users />} />
-                <Route path="/admin/merchants" element={<Merchants />} />
-                <Route path="/admin/orders" element={<Orders />} />
-              </Route>
-
-              <Route path="/" element={<Navigate to="/login" replace />} />
-               */}
+              <Route path="/products/:id" element={<Products />} />
+              <Route element={<ProtectedRoute />}></Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>

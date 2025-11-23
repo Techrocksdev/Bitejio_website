@@ -55,3 +55,16 @@ export async function getCategory(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+export async function verifyOTP(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/auth/verifyOtp`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}

@@ -23,26 +23,10 @@ function Category() {
     },
   });
 
-  const categories = [
-    { name: "Pizza", image: "assets/image/products/pizza.svg" },
-    { name: "Burger", image: "assets/image/products/burger.svg" },
-    { name: "Paratha", image: "assets/image/products/paratha.svg" },
-    { name: "North Indian", image: "assets/image/products/north-indian.svg" },
-    { name: "Cake", image: "assets/image/products/cake.svg" },
-    { name: "Ice Cream", image: "assets/image/products/ice-creame.svg" },
-    { name: "Biryani", image: "assets/image/products/biryani.svg" },
-    { name: "Chinese", image: "assets/image/products/chinese.svg" },
-    { name: "Kulcha", image: "assets/image/products/kulcha.svg" },
-    { name: "Noodles", image: "assets/image/products/noodles.svg" },
-    { name: "Shake", image: "assets/image/products/shake.svg" },
-    { name: "Shawarma", image: "assets/image/products/shawarma.svg" },
-    { name: "Non Veg", image: "assets/image/products/non-veg.svg" },
-    { name: "Soup", image: "assets/image/products/soup.svg" },
-  ];
-
+  const categories = response?.results?.categories;
   const groupedCategories = [];
-  for (let i = 0; i < categories.length; i += 12) {
-    groupedCategories.push(categories.slice(i, i + 12));
+  for (let i = 0; i < categories?.length; i += 12) {
+    groupedCategories.push(categories?.slice(i, i + 12));
   }
   console.log(groupedCategories);
 
@@ -126,16 +110,16 @@ function Category() {
                   <div className="row justify-content-center g-5">
                     {group.map((category, index) => (
                       <div key={index} className="col-2">
-                        <Link to="/product">
+                        <Link to={`/products/${category?._id}`}>
                           <div className="category-img m-auto">
                             <img
                               src={category.image}
-                              alt={category.name}
+                              alt={category.name_en}
                               className="img-fluid"
                             />
                           </div>
                           <h3 className="category-text mt-3">
-                            {category.name}
+                            {category.name_en}
                           </h3>
                         </Link>
                       </div>
