@@ -108,8 +108,8 @@ function Category() {
               {groupedCategories.map((group, groupIndex) => (
                 <div key={groupIndex}>
                   <div className="row justify-content-center g-5">
-                    {group.map((category, index) => (
-                      <div key={index} className="col-2">
+                    {group.map((category) => (
+                      <div key={category._id} className="col-2">
                         <Link to={`/products/${category?._id}`}>
                           <div className="category-img m-auto">
                             <img

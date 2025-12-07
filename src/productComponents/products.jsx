@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getCategory, getProduct } from "../apiServices/home/homeHttpService";
 import { useQuery } from "@tanstack/react-query";
@@ -7,8 +7,12 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Header from "../homeComponents/header";
+import Footer from "../homeComponents/footer";
+import ProductCard from "./productCard";
 
 function Products() {
+  const [subCat, setSubCat] = useState("");
   let { id } = useParams();
   const { data: response, isLoading } = useQuery({
     queryKey: ["subCategoryList", id],
@@ -16,7 +20,7 @@ function Products() {
       const formData = {
         page: 1,
         pageSize: 1000,
-        categoryId: "",
+        categoryId: id,
         search: "",
       };
       return getCategory(formData);
@@ -26,14 +30,16 @@ function Products() {
 
   const {
     data: response2,
-    isLoading2,
+    isLoading: isLoading2,
+    isFetching,
     refetch,
   } = useQuery({
-    queryKey: ["productList"],
+    queryKey: ["productList", id, subCat],
     queryFn: async () => {
       const formData = {
         page: 1,
         pageSize: 1000,
+        categoryId: subCat ? subCat : id,
         search: "",
       };
       return getProduct(formData);
@@ -46,10 +52,10 @@ function Products() {
   const products = response2?.results?.products || [];
 
   const SampleNextArrow = ({ onClick, currentSlide, slideCount }) => {
-    const isDisabled = currentSlide === slideCount - 8;
+    const isDisabled = currentSlide >= slideCount - 1;
     return (
       <button
-        className={` slide-btn next ${isDisabled ? "slick-disabled" : ""}`}
+        className={`slide-btn next ${isDisabled ? "slick-disabled" : ""}`}
         onClick={!isDisabled ? onClick : undefined}
         disabled={isDisabled}
       >
@@ -57,7 +63,6 @@ function Products() {
       </button>
     );
   };
-
   const SamplePrevArrow = ({ onClick, currentSlide }) => {
     const isDisabled = currentSlide === 0;
     return (
@@ -74,11 +79,9 @@ function Products() {
   const sliderSettings = {
     dots: false,
     infinite: false,
-    speed: 600,
-    slidesToShow: 8,
-    slidesToScroll: 4,
+    speed: 500,
     arrows: true,
-    centerPadding: "20px",
+    variableWidth: true,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     responsive: [
@@ -115,6 +118,7 @@ function Products() {
 
   return (
     <>
+      <Header />
       <section className="product-details">
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center gap-2 flex-wrap">
@@ -147,17 +151,34 @@ function Products() {
                 ))
               ) : (
                 <Slider {...sliderSettings}>
-                  {results?.map((item, index) => (
-                    <div key={index} className="category-items-tabs-items ">
-                      <Link to="">{item.name_en}</Link>
-                    </div>
+                  {results?.map((item) => (
+                    <Link
+                      to=""
+                      onClick={() =>
+                        setSubCat(
+                          subCat
+                            ? subCat === item._id
+                              ? ""
+                              : item._id
+                            : item._id
+                        )
+                      }
+                      key={item._id}
+                      className={
+                        subCat === item._id
+                          ? "category-items-tabs-items active"
+                          : "category-items-tabs-items"
+                      }
+                    >
+                      <div>{item.name_en}</div>
+                    </Link>
                   ))}
                 </Slider>
               )}
             </div>
           </div>
           <div className="row g-4 ">
-            {isLoading2 || isLoading ? (
+            {isLoading2 || isLoading || (isFetching && !products.length) ? (
               <>
                 {[...Array(6)].map((_, index) => (
                   <div className="col-md-4 col-lg-4 col-xl-4" key={index}>
@@ -192,51 +213,8 @@ function Products() {
                 ))}
               </>
             ) : products?.length ? (
-              products?.map((item, index) => (
-                <div key={item._id} className="col-md-4 col-lg-4 col-xl-4">
-                  <Link to="">
-                    <div
-                      className="custom-card wow animate__animated animate__fadeInUp"
-                      data-wow-delay="0.2s"
-                    >
-                      <div className="custom-card-header">
-                        <img src={item?.images?.[0]} alt="" />
-                      </div>
-                      <div className="custom-card-body">
-                        <h2>{item.name_en}</h2>
-                        <div className="d-flex gap-2 align-items-center">
-                          <img
-                            src="../assets/image/icons/Star.svg"
-                            className="star"
-                            alt=""
-                          />
-                          <p className="text">4.8</p>
-                          <p className="text">Mario’s Kitchen</p>
-                        </div>
-                        <div className="mt-4">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex align-items-center gap-2">
-                              <img
-                                src="../assets/image/icons/watch.svg"
-                                alt=""
-                              />
-                              <p className="text">30-40 min</p>
-                            </div>
-                            <button className="comman-btn-main w-fit">
-                              <div className="d-flex gap-2 align-items-center h-100">
-                                <img
-                                  src="../assets/image/icons/plus.svg"
-                                  alt=""
-                                />
-                                Add
-                              </div>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
+              products?.map((item) => (
+                <ProductCard item={item} refetch={refetch} />
               ))
             ) : (
               <div className="mt-5 no-data mx-auto d-flex flex-column justify-content-center align-items-center">
@@ -255,6 +233,7 @@ function Products() {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 }

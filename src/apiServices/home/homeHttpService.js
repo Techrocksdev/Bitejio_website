@@ -82,3 +82,68 @@ export async function getProduct(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+export async function viewProduct(id) {
+  try {
+    const { data } = await webHttpService.get(
+      `${import.meta.env.VITE_APIENDPOINT}/products/viewProduct/${id}`
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+
+export async function addToCart(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/products/addToCart`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+
+export async function getMyCart() {
+  try {
+    const { data } = await webHttpService.get(
+      `${import.meta.env.VITE_APIENDPOINT}/products/getMyCart`
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+export async function removeFromCart(formData) {
+  try {
+    const { data } = await webHttpService.put(
+      `${import.meta.env.VITE_APIENDPOINT}/products/removeFromCart`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+export async function updateCartQuantity(formData) {
+  try {
+    const { data } = await webHttpService.put(
+      `${import.meta.env.VITE_APIENDPOINT}/products/updateCartQuantity`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}

@@ -44,7 +44,7 @@ function Header() {
   const [loader, setLoader] = useState(false);
   const token = localStorage.getItem("token-bit-user");
   const navigate = useNavigate();
-  const { refetch, profile } = useUserAuth();
+  const { refetch } = useUserAuth();
 
   const onSubmit = async (data) => {
     setLoader(true);
@@ -167,9 +167,12 @@ function Header() {
             <div className="row g-3 align-items-center">
               <div className="col-3 mb-md-4 mb-lg-0 col-md-6 col-lg-2 col-xl-1">
                 {/* Logo */}
-                <div className="logo">
-                  <img src="assets/image/project/logo.svg" alt="Bitezio Logo" />
-                </div>
+                <Link to="/" className="logo">
+                  <img
+                    src="../../assets/image/project/logo.svg"
+                    alt="Bitezio Logo"
+                  />
+                </Link>
               </div>
               <div className="col-12 order-3 order-md-3 order-xl-2 col-md-6 col-lg-3 col-xl-3">
                 {/* Location */}
@@ -183,7 +186,7 @@ function Header() {
                   >
                     <div className="d-flex gap-2 align-items-center">
                       <span className="icon">
-                        <img src="assets/image/icons/MapPin.svg" alt="" />
+                        <img src="../../assets/image/icons/MapPin.svg" alt="" />
                       </span>
                       B block Street no. 10, Surajmal
                     </div>
@@ -219,7 +222,10 @@ function Header() {
                     id="search"
                   />
                   <span className="search-icon">
-                    <img src="assets/image/icons/MagnifyingGlass.svg" alt="" />
+                    <img
+                      src="../../assets/image/icons/MagnifyingGlass.svg"
+                      alt=""
+                    />
                   </span>
                   <div
                     className="search-dropdown-content d-none"
@@ -228,7 +234,7 @@ function Header() {
                     <div className="search-dropdown-content-item">
                       <div className="img">
                         <img
-                          src="assets/image/products/p-1.png"
+                          src="../../assets/image/products/p-1.png"
                           className="w-100 h-100 object-fit-cover"
                           alt=""
                         />
@@ -241,7 +247,7 @@ function Header() {
                     <div className="search-dropdown-content-item">
                       <div className="img">
                         <img
-                          src="assets/image/products/p-1.png"
+                          src="../../assets/image/products/p-1.png"
                           className="w-100 h-100 object-fit-cover"
                           alt=""
                         />
@@ -254,7 +260,7 @@ function Header() {
                     <div className="search-dropdown-content-item">
                       <div className="img">
                         <img
-                          src="assets/image/products/p-1.png"
+                          src="../../assets/image/products/p-1.png"
                           className="w-100 h-100 object-fit-cover"
                           alt=""
                         />
@@ -267,7 +273,7 @@ function Header() {
                     <div className="search-dropdown-content-item">
                       <div className="img">
                         <img
-                          src="assets/image/products/p-1.png"
+                          src="../../assets/image/products/p-1.png"
                           className="w-100 h-100 object-fit-cover"
                           alt=""
                         />
@@ -280,7 +286,7 @@ function Header() {
                     <div className="search-dropdown-content-item">
                       <div className="img">
                         <img
-                          src="assets/image/products/p-1.png"
+                          src="../../assets/image/products/p-1.png"
                           className="w-100 h-100 object-fit-cover"
                           alt=""
                         />
@@ -296,37 +302,63 @@ function Header() {
               <div className="col-9 text-end mb-md-4 mb-lg-0 order-2 order-md-2 order-xl-4 col-md-6 col-lg-3 col-xl-4">
                 {token ? (
                   <div className="auth">
-                    <div className="dropdown">
+                    <div className="dropdown auth-profile">
                       <Link
                         to=""
-                        className=" signup btn-comman pb-0 d-flex align-items-center text-decoration-none dropdown-toggle profile-dropdown"
-                        id="accountMenu"
+                        role="button"
+                        id="profileDropdown"
                         data-bs-toggle="dropdown"
+                        aria-expanded="false"
                       >
-                        <i className="fa fa-user me-2"></i>
-                        <span className="fw-semibold">
-                          {profile?.name || "User"}
-                        </span>
+                        <div
+                          className="d-flex gap-2 align-items-center text-white fs-6 fw-semibold
+                                        text-underline-none"
+                        >
+                          <img
+                            src="../../assets/image/icons/UserCircle.svg"
+                            alt=""
+                          />
+                          Profile
+                        </div>
                       </Link>
                       <ul
-                        className="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="accountMenu"
+                        className="dropdown-menu"
+                        aria-labelledby="profileDropdown"
                       >
                         <li>
+                          <Link className="dropdown-item" to="/my-orders">
+                            My Orders
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="dropdown-item" to="/my-profile">
+                            My Profile
+                          </Link>
+                        </li>
+                        <li>
                           <Link
-                            className="dropdown-item"
                             to=""
+                            className="dropdown-item"
                             onClick={(e) => {
                               e.preventDefault();
                               logout();
                             }}
                           >
-                            <i className="fa fa-sign-out me-2" />
-                            Logout
+                            Log Out
                           </Link>
                         </li>
                       </ul>
                     </div>
+
+                    <Link to="/cart" className="addToCart btn-comman">
+                      <div className="d-flex gap-2">
+                        <img
+                          src="../../assets/image/icons/ShoppingCart.svg"
+                          alt=""
+                        />
+                        <span className="d-none d-md-block"> 2 items</span>
+                      </div>
+                    </Link>
                   </div>
                 ) : (
                   <div className="auth">
@@ -373,7 +405,7 @@ function Header() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <img
-              src="assets/image/icons/bike.svg"
+              src="../../assets/image/icons/bike.svg"
               alt="Delivery"
               width={100}
               className="mx-auto mb-3"
@@ -470,7 +502,7 @@ function Header() {
             onSubmit={handleSubmit1(onSubmit1)}
           >
             <img
-              src="assets/image/icons/bike.svg"
+              src="../../assets/image/icons/bike.svg"
               alt="Delivery"
               width={100}
               className="mx-auto mb-3"
@@ -664,7 +696,7 @@ function Header() {
             onSubmit={handleSubmit2(onSubmit2)}
           >
             <img
-              src="assets/image/icons/bike.svg"
+              src="../../assets/image/icons/bike.svg"
               alt="Delivery"
               width={100}
               className="mx-auto mb-3"

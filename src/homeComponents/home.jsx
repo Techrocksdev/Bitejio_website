@@ -1,8 +1,180 @@
 import React from "react";
 import Header from "./header";
 import Category from "./category";
+import Footer from "./footer";
+import { useQuery } from "@tanstack/react-query";
+import { getProduct } from "../apiServices/home/homeHttpService";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import ProductCard from "../productComponents/productCard";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function Home() {
+  const { data: response, isLoading } = useQuery({
+    queryKey: ["mostPopularList"],
+    queryFn: async () => {
+      const formData = {
+        page: 1,
+        pageSize: 1000,
+        categoryId: "",
+        search: "",
+      };
+      return getProduct(formData);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const popularProducts = response?.results?.products || [];
+
+  const { data: response2, isLoading: isLoading2 } = useQuery({
+    queryKey: ["newProductList"],
+    queryFn: async () => {
+      const formData = {
+        page: 1,
+        pageSize: 1000,
+        categoryId: "",
+        search: "",
+      };
+      return getProduct(formData);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const newProducts = response2?.results?.products || [];
+
+  const NextArrow = ({ onClick, currentSlide, slideCount }) => {
+    const isDisabled = currentSlide + sliderSettings.slidesToShow >= slideCount;
+    return (
+      <button
+        className={`slide nex active ${isDisabled ? "slick-disabled" : ""}`}
+        onClick={!isDisabled ? onClick : undefined}
+        disabled={isDisabled}
+      >
+        <img src="assets/image/icons/CaretRight.svg" alt="" />
+      </button>
+    );
+  };
+
+  const PrevArrow = ({ onClick, currentSlide }) => {
+    const isDisabled = currentSlide === 0;
+    return (
+      <button
+        className={`slide pre active ${isDisabled ? "slick-disabled" : ""}`}
+        onClick={!isDisabled ? onClick : undefined}
+        disabled={isDisabled}
+      >
+        <img src="assets/image/icons/CaretLeft.svg" alt="" />
+      </button>
+    );
+  };
+
+  const sliderSettings = {
+    dots: false,
+    infinite: false,
+    speed: 600,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    arrows: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+
+  const NextArrow2 = ({ onClick, currentSlide, slideCount }) => {
+    const isDisabled =
+      currentSlide + sliderSettings2.slidesToShow >= slideCount;
+    return (
+      <button
+        className={`slide nex active ${isDisabled ? "slick-disabled" : ""}`}
+        onClick={!isDisabled ? onClick : undefined}
+        disabled={isDisabled}
+      >
+        <img src="assets/image/icons/CaretRight.svg" alt="" />
+      </button>
+    );
+  };
+
+  const PrevArrow2 = ({ onClick, currentSlide }) => {
+    const isDisabled = currentSlide === 0;
+    return (
+      <button
+        className={`slide pre active ${isDisabled ? "slick-disabled" : ""}`}
+        onClick={!isDisabled ? onClick : undefined}
+        disabled={isDisabled}
+      >
+        <img src="assets/image/icons/CaretLeft.svg" alt="" />
+      </button>
+    );
+  };
+
+  const sliderSettings2 = {
+    dots: false,
+    infinite: false,
+    speed: 600,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    arrows: true,
+    nextArrow: <NextArrow2 />,
+    prevArrow: <PrevArrow2 />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <Header />
@@ -41,167 +213,51 @@ function Home() {
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center justify-content-between mb-5">
             <h2 className="heading">Most Popular</h2>
-            <div className="d-flex align-items-center gap-3">
-              <button className="slide prev">
-                <img src="assets/image/icons/CaretLeft.svg" alt="" />
-              </button>
-              <button className="slide next active">
-                <img src="assets/image/icons/CaretRight.svg" alt="" />
-              </button>
-            </div>
           </div>
-          <div className="row g-4">
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img src="assets/image/products/pizza-p.svg" alt="" />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Margherita Pizza</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Mario’s Kitchen</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
-                      </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
+          <div className="row g-4 ">
+            {isLoading ? (
+              <>
+                {[...Array(4)].map((_, index) => (
+                  <div className="col-md-6 col-lg-4 col-xl-3" key={index}>
+                    <a>
+                      <div
+                        className="custom-card wow animate__animated animate__fadeInUp"
+                        data-wow-delay="0.2s"
+                      >
+                        <div className="custom-card-header">
+                          <Skeleton />
                         </div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img
-                    src="assets/image/products/Chicken-Biryani-p.svg"
-                    alt=""
-                  />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Chicken Biryani</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Spice Garden</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
-                      </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
+                        <div className="custom-card-body">
+                          <h2>
+                            <Skeleton />
+                          </h2>
+                          <div>
+                            <Skeleton style={{ width: "70%" }} />
+                          </div>
+                          <div className="mt-4">
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex align-items-center gap-2 w-100 ">
+                                <p className="text w-100">
+                                  <Skeleton style={{ width: "100%" }} />
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img src="assets/image/products/Shahi-Paneer-p.svg" alt="" />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Shahi Paneer</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Punjabi Shan</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
                       </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
-                        </div>
-                      </button>
-                    </div>
+                    </a>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img src="assets/image/products/Malai-Kofta-p.svg" alt="" />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Malai Kofta</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Punjabi Shan</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
-                      </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                ))}
+              </>
+            ) : popularProducts?.length ? (
+              <Slider {...sliderSettings}>
+                {popularProducts?.map((item) => (
+                  <ProductCard item={item} home={true} />
+                ))}
+              </Slider>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </section>
@@ -209,167 +265,51 @@ function Home() {
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center justify-content-between mb-5">
             <h2 className="heading">Newly Added</h2>
-            <div className="d-flex align-items-center gap-3">
-              <button className="slide prev">
-                <img src="assets/image/icons/CaretLeft.svg" alt="" />
-              </button>
-              <button className="slide next active">
-                <img src="assets/image/icons/CaretRight.svg" alt="" />
-              </button>
-            </div>
           </div>
-          <div className="row g-4">
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img src="assets/image/products/pizza-p.svg" alt="" />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Margherita Pizza</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Mario’s Kitchen</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
-                      </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
+          <div className="row g-4 ">
+            {isLoading2 ? (
+              <>
+                {[...Array(4)].map((_, index) => (
+                  <div className="col-md-6 col-lg-4 col-xl-3" key={index}>
+                    <a>
+                      <div
+                        className="custom-card wow animate__animated animate__fadeInUp"
+                        data-wow-delay="0.2s"
+                      >
+                        <div className="custom-card-header">
+                          <Skeleton />
                         </div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img
-                    src="assets/image/products/Chicken-Biryani-p.svg"
-                    alt=""
-                  />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Chicken Biryani</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Spice Garden</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
-                      </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
+                        <div className="custom-card-body">
+                          <h2>
+                            <Skeleton />
+                          </h2>
+                          <div>
+                            <Skeleton style={{ width: "70%" }} />
+                          </div>
+                          <div className="mt-4">
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex align-items-center gap-2 w-100 ">
+                                <p className="text w-100">
+                                  <Skeleton style={{ width: "100%" }} />
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img src="assets/image/products/Shahi-Paneer-p.svg" alt="" />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Shahi Paneer</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Punjabi Shan</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
                       </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
-                        </div>
-                      </button>
-                    </div>
+                    </a>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-4 col-xl-3">
-              <div
-                className="custom-card wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.2s"
-              >
-                <div className="custom-card-header">
-                  <img src="assets/image/products/Malai-Kofta-p.svg" alt="" />
-                </div>
-                <div className="custom-card-body">
-                  <h2>Malai Kofta</h2>
-                  <div className="d-flex gap-2 align-items-center">
-                    <img
-                      src="assets/image/icons/Star.svg"
-                      className="star"
-                      alt=""
-                    />
-                    <p className="text">4.8</p>
-                    <p className="text">.</p>
-                    <p className="text">Punjabi Shan</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-2">
-                        <img src="assets/image/icons/watch.svg" alt="" />
-                        <p className="text">30-40 min</p>
-                      </div>
-                      <button className="comman-btn-main w-fit">
-                        <div className="d-flex gap-2 align-items-center h-100">
-                          <img src="assets/image/icons/plus.svg" alt="" />
-                          Add
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                ))}
+              </>
+            ) : newProducts?.length ? (
+              <Slider {...sliderSettings2}>
+                {newProducts?.map((item) => (
+                  <ProductCard item={item} home={true} />
+                ))}
+              </Slider>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </section>
@@ -428,137 +368,7 @@ function Home() {
           </div>
         </div>
       </section>
-      <footer className="footer">
-        <div className="container comman-spacing-top-bottom pb-0">
-          <div className="footer-wrapper">
-            <div className="row g-3">
-              <div
-                className="col-md-5 wow animate__animated animate__fadeInLeft"
-                data-wow-delay="0.2s"
-              >
-                <div className="logo">
-                  <img src="assets/image/project/logo-main.svg" alt="" />
-                </div>
-                <div className="mt-3">
-                  <p className="text">Taste the Difference, Live the Moment</p>
-                </div>
-                <div className="mt-4">
-                  <div className="social-link">
-                    <div
-                      className="social-item wow animate__animated animate__bounceIn"
-                      data-wow-delay="0.2s"
-                    >
-                      <img src="assets/image/icons/facebook.svg" alt="" />
-                    </div>
-                    <div
-                      className="social-item wow animate__animated animate__bounceIn"
-                      data-wow-delay="0.2s"
-                    >
-                      <img src="assets/image/icons/linkedin.svg" alt="" />
-                    </div>
-                    <div
-                      className="social-item wow animate__animated animate__bounceIn"
-                      data-wow-delay="0.2s"
-                    >
-                      <img src="assets/image/icons/instagram.svg" alt="" />
-                    </div>
-                    <div
-                      className="social-item wow animate__animated animate__bounceIn"
-                      data-wow-delay="0.2s"
-                    >
-                      <img src="assets/image/icons/twitter.svg" alt="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="col-auto pe-5 wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.3s"
-              >
-                <ul className="footer-link-wrapper">
-                  <li>
-                    <h2 className="footer-link-heading">Company</h2>
-                  </li>
-                  <li>
-                    <a href="about-us.html" className="footer-link">
-                      About
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-link">
-                      Bitezio
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-link">
-                      Careers
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-link">
-                      Team
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div
-                className="col-md-3 col-lg-2 wow animate__animated animate__fadeInUp"
-                data-wow-delay="0.4s"
-              >
-                <ul className="footer-link-wrapper">
-                  <li>
-                    <h2 className="footer-link-heading">Legal</h2>
-                  </li>
-                  <li>
-                    <a href="tmc.html" className="footer-link">
-                      Terms and Conditions
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-link">
-                      Cookie Policy
-                    </a>
-                  </li>
-                  <li>
-                    <a href="privacy-policy.html" className="footer-link">
-                      Privacy Policy
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div
-                className="col-md-12 col-lg-3 wow animate__animated animate__fadeInRight"
-                data-wow-delay="0.6s"
-              >
-                <ul className="footer-link-wrapper">
-                  <li>
-                    <h2 className="footer-link-heading">Contact Us</h2>
-                  </li>
-                  <li>
-                    <a href="tmc.html" className="footer-link">
-                      <img src="assets/image/icons/call.svg" alt="" />
-                      (908) 395-0111, (908) 395-0111.
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-link">
-                      <img src="assets/image/icons/email.svg" alt="" />
-                      bitezio.brand@bitezio.com
-                    </a>
-                  </li>
-                  <li>
-                    <a href="privacy-policy.html" className="footer-link">
-                      <img src="assets/image/icons/map.svg" alt="" />
-                      175 Morristown Road, Ste. 103 Basking Ridge, NJ 07920
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="footer-copy-right">© 2025 Bitezio Pvt ltd</div>
-        </div>
-      </footer>
+      <Footer />
       {/* Pincode Modal */}
       <div
         className="modal fade"
