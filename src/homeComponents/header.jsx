@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -42,9 +42,132 @@ function Header() {
   });
 
   const [loader, setLoader] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
+  const [locationData, setLocationData] = useState(null);
   const token = localStorage.getItem("token-bit-user");
   const navigate = useNavigate();
   const { refetch } = useUserAuth();
+
+  useEffect(() => {
+    const savedLocation = sessionStorage.getItem("userLocation");
+    if (savedLocation) {
+      const parsedLocation = JSON.parse(savedLocation);
+      setLocationData(parsedLocation);
+    }
+  }, []);
+
+  const getCurrentLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error("GEOLOCATION_NOT_SUPPORTED"));
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve(position.coords),
+        (error) => reject(error),
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        }
+      );
+    });
+  };
+
+  const getAddressFromCoords = async (lat, lng) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
+        {
+          headers: {
+            "User-Agent": "YourAppName/1.0",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch address");
+
+      const data = await response.json();
+      const address = data.address || {};
+
+      return {
+        fullAddress: data.display_name || "Address not found",
+        locality:
+          address.suburb || address.neighbourhood || address.village || "",
+        city: address.city || address.town || address.state_district || "",
+        state: address.state || "",
+        country: address.country || "",
+        postcode: address.postcode || "",
+        formattedShort: formatShortAddress(address),
+        coordinates: { lat, lng },
+      };
+    } catch (error) {
+      console.error("Address fetch error:", error);
+      throw error;
+    }
+  };
+
+  const formatShortAddress = (address) => {
+    const parts = [];
+
+    if (address.suburb || address.neighbourhood) {
+      parts.push(address.suburb || address.neighbourhood);
+    }
+    if (address.city || address.town) {
+      parts.push(address.city || address.town);
+    } else if (address.state_district) {
+      parts.push(address.state_district);
+    }
+
+    return parts.join(", ") || "Current Location";
+  };
+
+  const handleDetectLocation = async () => {
+    setIsLoading(true);
+    try {
+      const coords = await getCurrentLocation();
+      const { latitude, longitude } = coords;
+
+      const addressData = await getAddressFromCoords(latitude, longitude);
+      setLocationData(addressData);
+      sessionStorage.setItem("userLocation", JSON.stringify(addressData));
+
+      return addressData;
+    } catch (error) {
+      console.error("❌ Location error:", error);
+
+      if (error.message === "GEOLOCATION_NOT_SUPPORTED") {
+        showGlobalAlert(
+          "Your browser doesn't support location services",
+          "error"
+        );
+      } else if (error.code === 1) {
+        showGlobalAlert(
+          "Location access denied. Please enable location permission in your browser settings.",
+          "error"
+        );
+      } else if (error.code === 2) {
+        showGlobalAlert(
+          "Unable to determine your location. Please check your device settings.",
+          "error"
+        );
+      } else if (error.code === 3) {
+        showGlobalAlert(
+          "Location request timed out. Please try again.",
+          "error"
+        );
+      } else {
+        showGlobalAlert(
+          "Unable to detect your location. Please try again or enter manually.",
+          "error"
+        );
+      }
+
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     setLoader(true);
@@ -185,10 +308,22 @@ function Header() {
                     aria-expanded="false"
                   >
                     <div className="d-flex gap-2 align-items-center">
-                      <span className="icon">
-                        <img src="../../assets/image/icons/MapPin.svg" alt="" />
-                      </span>
-                      B block Street no. 10, Surajmal
+                      {isloading ? (
+                        <i
+                          class="fas fa-circle-notch fa-spin"
+                          style={{ color: "#e46a15" }}
+                        ></i>
+                      ) : (
+                        <span className="icon">
+                          <img
+                            src="../../assets/image/icons/MapPin.svg"
+                            alt=""
+                          />
+                        </span>
+                      )}
+
+                      {locationData?.formattedShort ||
+                        "Enter your delivery location"}
                     </div>
                   </button>
                   <ul
@@ -196,19 +331,53 @@ function Header() {
                     aria-labelledby="locationDropdown"
                   >
                     <li>
-                      <a className="dropdown-item" href="#">
-                        B block Street no. 10, Surajmal
-                      </a>
+                      <Link
+                        className="dropdown-item current-loc pb-2"
+                        to=""
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDetectLocation();
+                        }}
+                      >
+                        <div className="row">
+                          <div className="col-auto pe-0">
+                            {isloading ? (
+                              <i class="fas fa-circle-notch fa-spin"></i>
+                            ) : (
+                              <i class="fas fa-location"></i>
+                            )}
+                          </div>
+
+                          <div className="col">
+                            Detech current location <br />{" "}
+                            <span>Using GPS</span>
+                          </div>
+                        </div>
+                      </Link>
                     </li>
                     <li>
-                      <a className="dropdown-item" href="#">
-                        Sector 21, Noida
+                      <a
+                        className="dropdown-item my-2 "
+                        style={{ fontWeight: "500" }}
+                      >
+                        Recent Locations
                       </a>
                     </li>
+
                     <li>
-                      <a className="dropdown-item" href="#">
-                        Connaught Place, Delhi
-                      </a>
+                      <Link className="dropdown-item" to="">
+                        <i class="fas fa-clock me-2"></i> B block Street no. 10
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="">
+                        <i class="fas fa-clock me-2"></i> Sector 21, Noida
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="">
+                        <i class="fas fa-clock me-2"></i> Connaught Place, Delhi
+                      </Link>
                     </li>
                   </ul>
                 </div>

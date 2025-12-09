@@ -256,7 +256,11 @@ function Cart() {
                           </div>
                         </div>
                         <div className="mt-4">
-                          <div className="add-new-address">
+                          <div
+                            className="add-new-address"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addAddressModal"
+                          >
                             <img
                               src="assets/image/icons/Plus-gray.svg"
                               alt=""
@@ -445,7 +449,7 @@ function Cart() {
       </div>
       <div
         className="modal fade"
-        id="addressModal"
+        id="addAddressModal"
         tabIndex={-1}
         aria-hidden="true"
       >
