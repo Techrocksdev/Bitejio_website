@@ -1,11 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./header";
 import Footer from "./footer";
 import { useUserAuth } from "../commonComponents/authContext";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
+import { editProfile } from "../apiServices/home/homeHttpService";
+import { RotatingLines } from "react-loader-spinner";
 
 function Profile() {
-  const { profile } = useUserAuth();
+  const { profile, refetch } = useUserAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    mode: "onChange",
+  });
+  const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    if (profile?.firstName) {
+      setValue("firstName", profile?.firstName);
+      setValue("lastName", profile?.lastName);
+      setValue("email", profile?.email);
+      setValue("dob", profile?.dob);
+    }
+  }, [profile]);
+
+  const onSubmit = async (data) => {
+    setLoader(true);
+    try {
+      const response = await editProfile(data);
+      if (!response.error) {
+        showGlobalAlert(response.message, "success");
+        await refetch();
+        document.getElementById("closeAddMerchantModal").click();
+      } else {
+        showGlobalAlert(response.message, "error");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      console.log("An error occurred");
+    } finally {
+      setLoader(false);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -14,7 +56,7 @@ function Profile() {
         <div className="container">
           <div className="comman-spacing-top-bottom">
             <h2 className="heading fw-medium">
-              Welcome {profile?.firstName ? "," : ""}{" "}
+              Welcome{profile?.firstName ? "," : ""}{" "}
               <span className="fw-semibold">
                 {profile?.firstName} {profile?.lastName}
               </span>
@@ -30,7 +72,14 @@ function Profile() {
                       </Link>
                       <Link to="/my-profile" className="link-item active">
                         <img src="assets/image/icons/UserCircle.svg" alt="" />
-                        <span>My Profile</span>
+                        <span>Profile</span>
+                      </Link>
+                      <Link to="/my-addresses" className="link-item ">
+                        <i
+                          class="fas fa-location me-3"
+                          style={{ color: "#727272" }}
+                        ></i>
+                        <span>Addresses</span>
                       </Link>
                     </div>
                   </div>
@@ -40,16 +89,44 @@ function Profile() {
                       <div className="mt-4">
                         <h2 className="fs-6 fw-normal">Personal Details</h2>
                         <div className="mt-4">
-                          <div className="row g-4">
+                          <form
+                            className="row g-4"
+                            onSubmit={handleSubmit(onSubmit)}
+                          >
                             <div className="col-md-6">
                               <label htmlFor className="form-label">
                                 First Name
                               </label>
                               <input
                                 type="text"
-                                className="form-control"
-                                placeholder="First Name"
+                                className={`form-control ${
+                                  errors.firstName ? "input-error" : ""
+                                }`}
+                                placeholder="Enter first name"
+                                {...register("firstName", {
+                                  required: "First name is required",
+                                  minLength: {
+                                    value: 2,
+                                    message:
+                                      "First name must be at least 2 characters",
+                                  },
+                                  maxLength: {
+                                    value: 50,
+                                    message:
+                                      "First name must be less than 50 characters",
+                                  },
+                                  pattern: {
+                                    value: /^[A-Za-z\s]+$/,
+                                    message:
+                                      "First name can only contain letters and spaces",
+                                  },
+                                })}
                               />
+                              {errors.firstName && (
+                                <p className="form-error">
+                                  {errors.firstName.message}
+                                </p>
+                              )}
                             </div>
                             <div className="col-md-6">
                               <label htmlFor className="form-label">
@@ -57,67 +134,103 @@ function Profile() {
                               </label>
                               <input
                                 type="text"
-                                className="form-control"
-                                placeholder="Last Name"
+                                className={`form-control ${
+                                  errors.lastName ? "input-error" : ""
+                                }`}
+                                placeholder="Enter last name"
+                                {...register("lastName", {
+                                  required: "Last name is required",
+                                  minLength: {
+                                    value: 2,
+                                    message:
+                                      "Last name must be at least 2 characters",
+                                  },
+                                  maxLength: {
+                                    value: 50,
+                                    message:
+                                      "Last name must be less than 50 characters",
+                                  },
+                                  pattern: {
+                                    value: /^[A-Za-z\s]+$/,
+                                    message:
+                                      "Last name can only contain letters and spaces",
+                                  },
+                                })}
                               />
+                              {errors.lastName && (
+                                <p className="form-error">
+                                  {errors.lastName.message}
+                                </p>
+                              )}
                             </div>
                             <div className="col-md-6">
                               <label htmlFor className="form-label">
                                 Email
                               </label>
                               <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Email"
+                                type="email"
+                                className={`form-control ${
+                                  errors.email ? "input-error" : ""
+                                }`}
+                                placeholder="Enter email address"
+                                {...register("email", {
+                                  required: "Email is required",
+                                  pattern: {
+                                    value:
+                                      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: "Invalid email address",
+                                  },
+                                })}
                               />
+                              {errors.email && (
+                                <p className="form-error">
+                                  {errors.email.message}
+                                </p>
+                              )}
                             </div>
                             <div className="col-md-6">
                               <label htmlFor className="form-label">
                                 Birth Date
                               </label>
                               <input
-                                type="text"
-                                className="form-control"
-                                placeholder="DD-MM-YYYY"
+                                type="date"
+                                className={`form-control ${
+                                  errors.dob ? "input-error" : ""
+                                }`}
+                                {...register("dob", {
+                                  required: false,
+                                })}
+                                max={new Date().toISOString().split("T")[0]}
                               />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-3">
-                          <h2 className="fs-6 fw-normal">Saved Address</h2>
-                          <div className="border rounded px-3 py-3">
-                            <div className="d-flex align-items-center justify-content-between">
-                              <div className="d-flex gap-2 align-items-center">
-                                Home
-                                <img
-                                  src="assets/image/icons/HouseLine.svg"
-                                  alt=""
-                                />
-                              </div>
-                              <div className="d-flex gap-2 align-items-center">
-                                <p className="mb-0 gs-6 fw-normal text-main">
-                                  Edit
+                              {errors.dob && (
+                                <p className="form-error">
+                                  {errors.dob.message}
                                 </p>
-                                <img
-                                  src="assets/image/icons/bxs_edit.svg"
-                                  alt=""
-                                />
-                              </div>
+                              )}
                             </div>
-                            <p className="mb-0 fw-medium">
-                              B block Street no. 10, Surajmal vihar, delhi
-                              110092
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <div className="add-new-address">
-                            <img
-                              src="assets/image/icons/Plus-gray.svg"
-                              alt=""
-                            />
-                            Add New Address
-                          </div>
+                            <div className="col-12 mt-3">
+                              <button
+                                type="submit"
+                                className="comman-btn-main "
+                                disabled={loader}
+                              >
+                                {loader ? (
+                                  <>
+                                    <span className="me-2">Saving...</span>
+                                    <RotatingLines
+                                      strokeColor="white"
+                                      strokeWidth="5"
+                                      animationDuration="0.75"
+                                      width="20"
+                                      visible={true}
+                                    />
+                                  </>
+                                ) : (
+                                  "Save"
+                                )}
+                              </button>
+                            </div>
+                          </form>
                         </div>
                       </div>
                     </div>

@@ -1090,3 +1090,18 @@ input[type="number"]::-webkit-inner-spin-button {
 button {
   outline: none !important;
 }
+.current-loc {
+  color: var(--main) !important;
+  border-bottom: 1px solid #7272725e;
+}
+.current-loc span {
+  font-size: 13px;
+  color: var(--text-light);
+}
+.dropdown-menu {
+  width: 100%;
+}
+.d_active {
+  border: 2px solid var(--main) !important;
+  background-color: var(--light-main-2);
+}

@@ -12,10 +12,12 @@ import ScrollToTop from "./commonComponents/scrollToTop";
 import ProtectedRoute from "./commonComponents/protectedRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ProductDetails from "./productComponents/productDetails";
-import Cart from "./homeComponents/cart";
-import Profile from "./homeComponents/profile";
-import Orders from "./homeComponents/orders";
+const OrderPlaced = lazy(() => import("./homeComponents/orderPlaced"));
+const ProductDetails = lazy(() => import("./productComponents/productDetails"));
+const Cart = lazy(() => import("./homeComponents/cart"));
+const Profile = lazy(() => import("./homeComponents/profile"));
+const Orders = lazy(() => import("./homeComponents/orders"));
+const Addresses = lazy(() => import("./homeComponents/addresses"));
 
 const Home = lazy(() => import("./homeComponents/home"));
 const Products = lazy(() => import("./productComponents/products"));
@@ -103,6 +105,8 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/my-profile" element={<Profile />} />
                 <Route path="/my-orders" element={<Orders />} />
+                <Route path="/my-addresses" element={<Addresses />} />
+                <Route path="/order-confirmed" element={<OrderPlaced />} />
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

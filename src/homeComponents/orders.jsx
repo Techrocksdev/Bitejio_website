@@ -13,7 +13,7 @@ function Orders() {
         <div className="container">
           <div className="comman-spacing-top-bottom">
             <h2 className="heading fw-medium">
-              Welcome {profile?.firstName ? "," : ""}{" "}
+              Welcome{profile?.firstName ? "," : ""}{" "}
               <span className="fw-semibold">
                 {profile?.firstName} {profile?.lastName}
               </span>
@@ -29,7 +29,14 @@ function Orders() {
                       </Link>
                       <Link to="/my-profile" className="link-item">
                         <img src="assets/image/icons/UserCircle.svg" alt="" />
-                        <span>My Profile</span>
+                        <span>Profile</span>
+                      </Link>
+                      <Link to="/my-addresses" className="link-item ">
+                        <i
+                          class="fas fa-location me-3"
+                          style={{ color: "#727272" }}
+                        ></i>
+                        <span>Addresses</span>
                       </Link>
                     </div>
                   </div>

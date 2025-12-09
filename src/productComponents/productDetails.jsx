@@ -310,16 +310,10 @@ function ProductDetails() {
                       <span className="text-danger">Open Now</span> - 10:00 am -
                       11:00 pm
                     </p>
-                    <p className="text text-dark m-0">+91 9945821001,</p>
-                    <p className="text text-main m-0">+1 more</p>
                   </div>
                 </div>
                 <div className="col-12 col-md-6">
                   <div className="d-flex gap-4 flex-wrap align-items-center justify-content-md-end">
-                    <div className="d-flex gap-2 align-items-center">
-                      <img src="../assets/image/icons/CompassRose.svg" alt="" />
-                      <p className="text text-dark m-0">Direction</p>
-                    </div>
                     <div className="d-flex gap-2 align-items-center">
                       <img
                         src="../assets/image/icons/ShareNetwork.svg"
@@ -345,7 +339,7 @@ function ProductDetails() {
                       </div>
                     </div>
                     <p className="text mt-1 fs-4 fw-semibold m-0">
-                      Punjabi Shan Restaurant{" "}
+                      {details?.userId?.shopName}
                     </p>
                     <p className="text mt-1 fw-medium ">
                       D 102, B block, Connaught Place, New Delhi{" "}
@@ -362,7 +356,18 @@ function ProductDetails() {
                         ₹{details?.variant?.discountPrice}{" "}
                         <del className="text">₹{details?.variant?.price}</del>
                       </h2>
-                      <div className="badge">20% OFF</div>
+                      {details?.variant?.price &&
+                        details?.variant?.discountPrice && (
+                          <div className="badge">
+                            {Math.round(
+                              ((details.variant.price -
+                                details.variant.discountPrice) /
+                                details.variant.price) *
+                                100
+                            )}
+                            % OFF
+                          </div>
+                        )}
                     </div>
                     <div className="d-flex justify-content-md-end mt-4 w-100">
                       <div>
@@ -467,30 +472,7 @@ function ProductDetails() {
                   id="overview"
                   role="tabpanel"
                 >
-                  <p className="text text-start">
-                    Indulge in our signature Malai Kofta - tender vegetable
-                    dumplings made with fresh paneer, potatoes, and aromatic
-                    spices, served in a rich, creamy tomato-cashew gravy. Each
-                    kofta is carefully crafted and simmered in our traditional
-                    malai sauce, creating a perfect harmony of flavors that will
-                    transport you to the heart of North Indian cuisine.
-                  </p>
-                  <p className="text text-start fw-bold">More Information</p>
-                  <p className="text text-start">
-                    Paneer, potato, cornflour, green chilies, coriander leaves,
-                    cashews, raisins, onion, tomato, ginger-garlic paste, cashew
-                    nuts, fresh cream, milk, turmeric powder, red chili powder,
-                    coriander powder, cumin seeds, garam masala, salt, sugar,
-                    oil, ghee, coriander leaves
-                  </p>
-                  <p className="text text-start fw-bold">Ingredients</p>
-                  <p className="text text-start">
-                    Paneer, potato, cornflour, green chilies, coriander leaves,
-                    cashews, raisins, onion, tomato, ginger-garlic paste, cashew
-                    nuts, fresh cream, milk, turmeric powder, red chili powder,
-                    coriander powder, cumin seeds, garam masala, salt, sugar,
-                    oil, ghee, coriander leaves
-                  </p>
+                  <p className="text text-start">{details?.description_en}</p>
                 </div>
                 {/* Review Tab */}
                 <div className="tab-pane fade" id="review" role="tabpanel">

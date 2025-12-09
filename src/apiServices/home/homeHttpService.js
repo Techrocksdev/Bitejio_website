@@ -147,3 +147,83 @@ export async function updateCartQuantity(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+export async function editProfile(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/user/editProfile`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+export async function getMyAddresses(formData) {
+  try {
+    const { data } = await webHttpService.patch(
+      `${import.meta.env.VITE_APIENDPOINT}/user/getMyAddresses`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+
+export async function addAddress(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/user/addAddress`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+
+export async function updateAddress(formData) {
+  try {
+    const { data } = await webHttpService.put(
+      `${import.meta.env.VITE_APIENDPOINT}/user/updateAddress`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+export async function deleteAddress(id) {
+  try {
+    const { data } = await webHttpService.delete(
+      `${import.meta.env.VITE_APIENDPOINT}/user/deleteAddress/${id}`
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+
+export async function createOrder(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/products/createOrder`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}

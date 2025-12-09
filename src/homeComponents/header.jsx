@@ -322,8 +322,11 @@ function Header() {
                         </span>
                       )}
 
-                      {locationData?.formattedShort ||
-                        "Enter your delivery location"}
+                      {locationData?.formattedShort
+                        ? locationData?.formattedShort
+                        : isloading
+                        ? "Fetching your location..."
+                        : "Enter your delivery location"}
                     </div>
                   </button>
                   <ul

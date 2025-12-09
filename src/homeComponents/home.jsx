@@ -18,8 +18,8 @@ function Home() {
       const formData = {
         page: 1,
         pageSize: 1000,
-        categoryId: "",
         search: "",
+        type: "Popular",
       };
       return getProduct(formData);
     },
@@ -36,8 +36,8 @@ function Home() {
       const formData = {
         page: 1,
         pageSize: 1000,
-        categoryId: "",
         search: "",
+        type: "New",
       };
       return getProduct(formData);
     },

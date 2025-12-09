@@ -92,7 +92,7 @@ function ProductCard({ item, refetch, home }) {
                   alt=""
                 />
                 <p className="text">4.8</p>
-                <p className="text">Mario’s Kitchen</p>
+                <p className="text">{item.userId?.shopName}</p>
               </div>
               <div className="mt-4">
                 <div className="d-flex justify-content-between">
@@ -193,6 +193,7 @@ function ProductCard({ item, refetch, home }) {
                 <button
                   className="btn btn-light border"
                   data-bs-dismiss="modal"
+                  onClick={() => setVariantId("")}
                 >
                   Cancel
                 </button>

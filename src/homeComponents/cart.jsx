@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./header";
 import Footer from "./footer";
 import { useQuery } from "@tanstack/react-query";
 import {
+  createOrder,
   getMyCart,
   removeFromCart,
   updateCartQuantity,
 } from "../apiServices/home/homeHttpService";
 import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import AddressCart from "./addressCart";
+import { RotatingLines } from "react-loader-spinner";
 
 function Cart() {
+  const [addDetail, setAddDetail] = useState({});
+  const [selectedPayment, setSelectedPayment] = useState(20);
+  const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
   const {
     data: cart,
     isLoading,
@@ -22,7 +29,6 @@ function Cart() {
     queryFn: getMyCart,
     select: (data) => data.results.carts[0],
   });
-  console.log(cart);
 
   const removeProduct = async (productId, variantId) => {
     const formData = {
@@ -66,6 +72,61 @@ function Cart() {
       // eslint-disable-next-line no-unused-vars
     } catch (error) {
       console.log("An error occurred");
+    }
+  };
+  const handlePaymentChange = (e) => {
+    setSelectedPayment(e.target.value);
+  };
+  const totalPrice = cart?.products?.reduce((sum, item) => {
+    return sum + item.variantId.price * item.quantity;
+  }, 0);
+
+  const totalDiscount = cart?.products?.reduce((sum, item) => {
+    return sum + (item.variantId.discountPrice || 0) * item.quantity;
+  }, 0);
+  const onSubmit = async () => {
+    const address = {
+      address_line1: addDetail?.address_line1,
+      address_line2: addDetail?.address_line2,
+      postal_code: addDetail?.postal_code,
+      city: addDetail?.city,
+      country: addDetail?.country,
+      latitude: addDetail?.latitude,
+      longitude: addDetail?.longitude,
+      type: addDetail?.type,
+    };
+    const products = cart?.products?.map((item) => ({
+      productId: item.productId._id,
+      variantId: item.variantId._id,
+      merchantId: item.userId,
+      quantity: item.quantity,
+      amount: item.variantId.price,
+      paidAmount: 0,
+      discount: item.variantId.discountPrice,
+      advancePayment: 0,
+    }));
+
+    const formData = {
+      products: products,
+      address: address,
+      amount: totalPrice,
+      paidAmount: selectedPayment,
+      discount: totalDiscount,
+    };
+
+    try {
+      const response = await createOrder(formData);
+      if (!response.error) {
+        showGlobalAlert(response.message, "success");
+        navigate("/order-confirmed");
+      } else {
+        showGlobalAlert(response.message, "error");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      console.log("An error occurred");
+    } finally {
+      setLoader(false);
     }
   };
   return (
@@ -116,7 +177,7 @@ function Cart() {
                         ))
                       : cart?.products?.map((item) => (
                           <div
-                            key={item?.productId?.productId}
+                            key={item?.productId?._id}
                             className="cart-item d-flex align-items-center justify-content-between mb-3"
                           >
                             <div className="col-12 col-md-7 col-lg-6 d-flex align-items-center gap-2">
@@ -132,9 +193,11 @@ function Cart() {
                                   {item.productId.name_en}
                                 </h6>
                                 <small className="text-muted">
-                                  Royal Kitchen
+                                  {item.productId.userId.shopname}
                                 </small>
-                                <p className="fw-bold mb-0 mt-2">₹110</p>
+                                <p className="fw-bold mb-0 mt-2">
+                                  ₹{item?.variantId?.price}
+                                </p>
                               </div>
                             </div>
                             <div className="col-12 col-md-5 col-lg-6 d-flex align-items-center justify-content-end gap-2">
@@ -173,7 +236,7 @@ function Cart() {
                       <div className="mt-4">
                         <div className="border-top pt-3">
                           {/* Coupon */}
-                          <div className="coupon-card">
+                          {/* <div className="coupon-card">
                             <div className="row g-3">
                               <di className="col-9">
                                 <div className="coupon-input">
@@ -204,13 +267,14 @@ function Cart() {
                                 alt=""
                               />
                             </Link>
-                          </div>
+                          </div> */}
                         </div>
                         {/* Bill Details */}
                         <div className="bill-details mt-3">
                           <h2 className="heading">Bill details</h2>
                           <p className="d-flex justify-content-between mb-1">
-                            <span>Subtotal</span> <span>₹220</span>
+                            <span>Subtotal</span>{" "}
+                            <span>₹{totalPrice || 0}</span>
                           </p>
                           <p className="d-flex justify-content-between mb-1">
                             <span>Taxes &amp; Charges</span> <span>₹15</span>
@@ -218,8 +282,13 @@ function Cart() {
                           <p className="d-flex justify-content-between mb-3">
                             <span>Delivery Charges</span> <span>₹20</span>
                           </p>
+                          <p className="d-flex justify-content-between mb-3">
+                            <span>Discount</span>{" "}
+                            <span>₹{totalDiscount || 0}</span>
+                          </p>
                           <h6 className="d-flex justify-content-between fw-bold">
-                            <span>Total Payable</span> <span>₹235</span>
+                            <span>Total Payable</span>{" "}
+                            <span>₹{totalPrice + 15 + 20 - totalDiscount}</span>
                           </h6>
                         </div>
                       </div>
@@ -231,43 +300,11 @@ function Cart() {
                     <div className="mt-3">
                       <div className="rounded-3 bg-white overflow-hidden px-3 py-3">
                         <h2 className="heading">Delivery Address</h2>
-                        <div className="address">
-                          <div className="d-flex gap-2">
-                            <input
-                              type="radio"
-                              defaultChecked
-                              className="custom-radio"
-                            />
-                            <div className>
-                              <div className="d-flex gap-2 align-items-center">
-                                Home
-                                <img
-                                  src="assets/image/icons/HouseLine.svg"
-                                  alt=""
-                                />
-                              </div>
-                              B block Street no. 10, Surajmal vihar, delhi
-                              110092
-                            </div>
-                          </div>
-                          <div className="edit">
-                            Edit
-                            <img src="assets/image/icons/bxs_edit.svg" alt="" />
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <div
-                            className="add-new-address"
-                            data-bs-toggle="modal"
-                            data-bs-target="#addAddressModal"
-                          >
-                            <img
-                              src="assets/image/icons/Plus-gray.svg"
-                              alt=""
-                            />
-                            Add New Address
-                          </div>
-                        </div>
+
+                        <AddressCart
+                          setAddDetail={setAddDetail}
+                          addDetail={addDetail}
+                        />
                       </div>
                     </div>
                   )}
@@ -293,29 +330,80 @@ function Cart() {
                   <div className="col-md-5 col-lg-4">
                     <div className="rounded-3 bg-white overflow-hidden px-3 py-4">
                       <h2>Payment Option</h2>
-                      <div className="payment-option active mt-4">
-                        <div className="d-flex gap-3">
+                      <div className="payment-option mt-4">
+                        <label
+                          className="d-flex gap-3 align-items-center"
+                          style={{ cursor: "pointer" }}
+                        >
                           <input
                             type="radio"
-                            defaultChecked
+                            name="payment-method"
+                            value="20-percent"
+                            checked={selectedPayment === 20}
+                            onChange={handlePaymentChange}
                             className="custom-radio"
                           />
-                          <div className>Pay 20% Now, Rest on Delivery</div>
-                        </div>
+                          <div>Pay 20% Now, Rest on Delivery</div>
+                        </label>
                       </div>
+
                       <div className="payment-option mt-4">
-                        <div className="d-flex gap-3">
-                          <input type="radio" className="custom-radio" />
-                          <div className>Pay 100% Online</div>
-                        </div>
-                      </div>
-                      <div className="mt-3">
-                        <a
-                          href="order-confirmed.html"
-                          className="d-block comman-btn-main w-100"
+                        <label
+                          className="d-flex gap-3 align-items-center"
+                          style={{ cursor: "pointer" }}
                         >
-                          Pay now
-                        </a>
+                          <input
+                            type="radio"
+                            name="payment-method"
+                            value="100-percent"
+                            checked={selectedPayment === 100}
+                            onChange={handlePaymentChange}
+                            className="custom-radio"
+                          />
+                          <div>Pay 100% Online</div>
+                        </label>
+                      </div>
+
+                      <div className="payment-option mt-4">
+                        <label
+                          className="d-flex gap-3 align-items-center"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <input
+                            type="radio"
+                            name="payment-method"
+                            value="cod"
+                            checked={selectedPayment === 0}
+                            onChange={handlePaymentChange}
+                            className="custom-radio"
+                          />
+                          <div>Cash on Delivery</div>
+                        </label>
+                      </div>
+
+                      <div className="mt-3">
+                        <button
+                          className="d-block comman-btn-main w-100"
+                          disabled={loader}
+                          onClick={() => onSubmit()}
+                        >
+                          {loader ? (
+                            <>
+                              <RotatingLines
+                                strokeColor="white"
+                                strokeWidth="5"
+                                animationDuration="0.75"
+                                width="20"
+                                visible={true}
+                              />
+                              <span className="ms-2"> Wait..</span>
+                            </>
+                          ) : selectedPayment === 0 ? (
+                            "Place Order"
+                          ) : (
+                            "Pay Now"
+                          )}
+                        </button>
                       </div>
                       <div className="mt-3">
                         <div className="secure-payment-card">
@@ -439,138 +527,6 @@ function Cart() {
                       <p className="percentage-offer-dis">
                         5% off entire order on minimum of ₹200
                       </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="modal fade"
-        id="addAddressModal"
-        tabIndex={-1}
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title fs-5 fw-semibold">
-                Enter Delivery Address
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-              />
-            </div>
-            <div className="modal-body">
-              <div className="row">
-                {/* Left Side Form */}
-                <div className="col-md-6">
-                  <form>
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="House No, Flat, Building Name"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Area, Sector, Locality"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Nearby Landmark"
-                      />
-                    </div>
-                    <h6>Your Details</h6>
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Your Name"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Mobile Number"
-                      />
-                    </div>
-                    <h6>Save Address As</h6>
-                    <div className="save-btns mb-3">
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm btn-active"
-                      >
-                        Home
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                      >
-                        Work
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                      >
-                        Other
-                      </button>
-                    </div>
-                    <a
-                      href="checkout.html"
-                      className="comman-btn-main w-100 mt-4 d-block"
-                    >
-                      Continue
-                    </a>
-                  </form>
-                </div>
-                {/* Right Side Map */}
-                <div className="col-md-6">
-                  <div className="position-relative">
-                    <input
-                      type="text"
-                      className="form-control mb-2 ps-4"
-                      placeholder="B block Street no. 10, Surajmal vihar"
-                    />
-                    <img
-                      src="assets/image/icons/MagnifyingGlass.svg"
-                      className="position-absolute top-50 translate-y-middle start-0 ms-1"
-                      alt=""
-                    />
-                  </div>
-                  <div className>
-                    <img
-                      src="assets/image/bg/map.png"
-                      className="w-100 h-100"
-                      alt=""
-                    />
-                  </div>
-                  <div className="bg-light-main px-2 py-1 rounded mt-4">
-                    <div className="d-flex gap-2">
-                      <img
-                        src="assets/image/icons/MapPinSimpleArea.svg"
-                        alt=""
-                      />
-                      <div>
-                        <small className="text-dark fw-semibold">
-                          B block Street no. 10, Surajmal vi...
-                        </small>
-                        <br />
-                        <small className="text-light fw-normal">
-                          Surajmal vihar
-                        </small>
-                      </div>
                     </div>
                   </div>
                 </div>

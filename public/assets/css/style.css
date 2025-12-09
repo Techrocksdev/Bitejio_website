@@ -1101,3 +1101,7 @@ button {
 .dropdown-menu {
   width: 100%;
 }
+.d_active {
+  border: 2px solid var(--main) !important;
+  background-color: var(--light-main-2);
+}
