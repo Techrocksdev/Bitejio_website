@@ -27,12 +27,12 @@ function ProductDetails() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [variantId, setVariantId] = useState("");
   const [loader, setLoader] = useState(false);
-  const { token } = useUserAuth();
+  const { token, refetch } = useUserAuth();
 
   const {
     data: details,
     isLoading,
-    refetch,
+    refetch: refetch1,
   } = useQuery({
     queryKey: ["proDetails", id],
     queryFn: () => viewProduct(id),
@@ -69,6 +69,7 @@ function ProductDetails() {
       if (!response.error) {
         document.querySelector(`#cartModal [data-bs-dismiss="modal"]`).click();
         showGlobalAlert(response.message, "success");
+        refetch1();
         refetch();
       } else {
         showGlobalAlert(response.message, "error");
@@ -183,6 +184,7 @@ function ProductDetails() {
       const response = await updateCartQuantity(formData);
       if (!response.error) {
         showGlobalAlert(response.message, "success");
+        refetch1();
         refetch();
       } else {
         showGlobalAlert(response.message, "error");
@@ -564,7 +566,7 @@ function ProductDetails() {
             ) : similarProducts?.length ? (
               <Slider {...sliderSettings2}>
                 {similarProducts?.map((item) => (
-                  <ProductCard item={item} home={true} refetch={refetch2} />
+                  <ProductCard item={item} home={true} refetch2={refetch2} />
                 ))}
               </Slider>
             ) : (

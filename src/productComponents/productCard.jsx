@@ -8,10 +8,10 @@ import { RotatingLines } from "react-loader-spinner";
 import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
 import { useUserAuth } from "../commonComponents/authContext";
 
-function ProductCard({ item, refetch, home }) {
+function ProductCard({ item, refetch2, home }) {
   const [variantId, setVariantId] = useState("");
   const [loader, setLoader] = useState(false);
-  const { token } = useUserAuth();
+  const { token, refetch } = useUserAuth();
 
   const flyToCart = (imageUrl) => {
     const productImg = document.querySelector(`#product-img-${item._id}`);
@@ -45,8 +45,8 @@ function ProductCard({ item, refetch, home }) {
     setTimeout(() => {
       flyingImg.style.left = `${cartRect.left}px`;
       flyingImg.style.top = `${cartRect.top}px`;
-      flyingImg.style.width = "20px";
-      flyingImg.style.height = "20px";
+      flyingImg.style.width = "40px";
+      flyingImg.style.height = "40px";
       flyingImg.style.opacity = "0";
     }, 50);
     setTimeout(() => {
@@ -74,12 +74,10 @@ function ProductCard({ item, refetch, home }) {
         document
           .querySelector(`#cartModal${item._id} [data-bs-dismiss="modal"]`)
           .click();
+        showGlobalAlert(response.message, "success");
+        await Promise.all([refetch(), refetch2()]);
         setTimeout(() => {
           flyToCart(item?.images?.[0]);
-          setTimeout(() => {
-            showGlobalAlert(response.message, "success");
-            refetch();
-          }, 2000);
         }, 300);
       } else {
         showGlobalAlert(response.message, "error");
@@ -109,6 +107,7 @@ function ProductCard({ item, refetch, home }) {
       if (!response.error) {
         showGlobalAlert(response.message, "success");
         refetch();
+        refetch2();
       } else {
         showGlobalAlert(response.message, "error");
       }

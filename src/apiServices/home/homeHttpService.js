@@ -266,3 +266,16 @@ export async function createOrder(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+export async function getOrders(formData) {
+  try {
+    const { data } = await webHttpService.patch(
+      `${import.meta.env.VITE_APIENDPOINT}/products/getOrders`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}

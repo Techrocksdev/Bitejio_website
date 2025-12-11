@@ -1,17 +1,35 @@
 import React from "react";
 import Header from "./header";
 import Footer from "./footer";
+import { Link } from "react-router-dom";
+import Confetti from "react-confetti";
 
 function OrderPlaced() {
   return (
     <>
       <Header />
+      <Confetti
+        width={window.innerWidth}
+        height={window.innerHeight}
+        colors={["#e46a15", "#f46b45", "#eea849"]}
+        gravity={0.1}
+        initialVelocityX={2}
+        initialVelocityY={2}
+        numberOfPieces={200}
+        opacity={1}
+        recycle={false}
+        run
+        wind={0}
+      />
 
       <section className="order-confirmed-bg">
         <div className="container comman-spacing-top-bottom">
           <div className="order-confirmed-bg-wrapper">
             <div className="confirm-message">
-              <img src="assets/image/icons/CheckCircle.svg" alt="" />
+              <img
+                src="assets/image/icons/icons8-verified-account.gif"
+                alt=""
+              />
               <h2 className="confirmed-heading">Order Confirmed</h2>
               <p className="text">Your food is on its way</p>
               <div className="order-id-box text">
@@ -20,9 +38,9 @@ function OrderPlaced() {
             </div>
           </div>
           <div className>
-            <a href="index.html" className="text text-white comman-btn-main">
+            <Link to="/" className="text text-white comman-btn-main">
               Go Back
-            </a>
+            </Link>
           </div>
         </div>
       </section>

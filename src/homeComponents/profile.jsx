@@ -25,7 +25,10 @@ function Profile() {
       setValue("firstName", profile?.firstName);
       setValue("lastName", profile?.lastName);
       setValue("email", profile?.email);
-      setValue("dob", profile?.dob);
+      if (profile?.dob) {
+        const formattedDate = new Date(profile.dob).toISOString().split("T")[0];
+        setValue("dob", formattedDate);
+      }
     }
   }, [profile]);
 

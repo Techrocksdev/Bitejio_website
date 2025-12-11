@@ -39,7 +39,7 @@ function Header() {
   const [isloading, setIsLoading] = useState(false);
   const [locationData, setLocationData] = useState(null);
   const [type, setType] = useState("");
-  const { refetch, token, logout, login } = useUserAuth();
+  const { refetch, token, logout, login, profile } = useUserAuth();
   const savedLocation = sessionStorage.getItem("userLocation");
   const navigate = useNavigate();
 
@@ -541,11 +541,6 @@ function Header() {
                         aria-labelledby="profileDropdown"
                       >
                         <li>
-                          <Link className="dropdown-item" to="/my-orders">
-                            My Orders
-                          </Link>
-                        </li>
-                        <li>
                           <Link className="dropdown-item" to="/my-profile">
                             My Profile
                           </Link>
@@ -566,16 +561,21 @@ function Header() {
                         </li>
                       </ul>
                     </div>
-
-                    <Link to="/cart" className="addToCart btn-comman">
-                      <div className="d-flex gap-2">
-                        <img
-                          src="../../assets/image/icons/ShoppingCart.svg"
-                          alt=""
-                        />
-                        <span className="d-none d-md-block"> 2 items</span>
-                      </div>
-                    </Link>
+                    {profile?.cartCount ? (
+                      <Link to="/cart" className="addToCart btn-comman">
+                        <div className="d-flex gap-2">
+                          <img
+                            src="../../assets/image/icons/ShoppingCart.svg"
+                            alt=""
+                          />
+                          <span className="d-none d-md-block">
+                            {profile?.cartCount} items
+                          </span>
+                        </div>
+                      </Link>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 ) : (
                   <div className="auth">

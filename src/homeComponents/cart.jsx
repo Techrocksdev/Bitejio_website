@@ -14,16 +14,19 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import AddressCart from "./addressCart";
 import { RotatingLines } from "react-loader-spinner";
+import { useUserAuth } from "../commonComponents/authContext";
 
 function Cart() {
   const [addDetail, setAddDetail] = useState({});
   const [selectedPayment, setSelectedPayment] = useState(20);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
+  const { refetch } = useUserAuth();
+
   const {
     data: cart,
     isLoading,
-    refetch,
+    refetch: refetch2,
   } = useQuery({
     queryKey: ["cartList"],
     queryFn: getMyCart,
@@ -40,6 +43,7 @@ function Cart() {
       const response = await removeFromCart(formData);
       if (!response.error) {
         showGlobalAlert(response.message, "success");
+        refetch2();
         refetch();
       } else {
         showGlobalAlert(response.message, "error");
@@ -65,6 +69,7 @@ function Cart() {
       const response = await updateCartQuantity(formData);
       if (!response.error) {
         showGlobalAlert(response.message, "success");
+        refetch2();
         refetch();
       } else {
         showGlobalAlert(response.message, "error");
@@ -89,6 +94,7 @@ function Cart() {
       showGlobalAlert("Please select address", "error");
       return;
     }
+    setLoader(true);
     const address = {
       address_line1: addDetail?.address_line1,
       address_line2: addDetail?.address_line2,
@@ -100,6 +106,7 @@ function Cart() {
       type: addDetail?.type,
     };
     const products = cart?.products?.map((item) => ({
+      cartId: cart?._id,
       productId: item.productId._id,
       variantId: item.variantId._id,
       merchantId: item.userId,
@@ -122,6 +129,7 @@ function Cart() {
       const response = await createOrder(formData);
       if (!response.error) {
         showGlobalAlert(response.message, "success");
+        refetch();
         navigate("/order-confirmed");
       } else {
         showGlobalAlert(response.message, "error");
@@ -387,7 +395,7 @@ function Cart() {
 
                       <div className="mt-3">
                         <button
-                          className="d-block comman-btn-main w-100"
+                          className="comman-btn-main w-100"
                           disabled={loader}
                           onClick={() => onSubmit()}
                         >

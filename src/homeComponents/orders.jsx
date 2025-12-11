@@ -3,9 +3,32 @@ import Footer from "./footer";
 import Header from "./header";
 import { useUserAuth } from "../commonComponents/authContext";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getOrders } from "../apiServices/home/homeHttpService";
 
 function Orders() {
   const { profile } = useUserAuth();
+  const { data: response } = useQuery({
+    queryKey: ["ordersList"],
+    queryFn: async () => {
+      const formData = {
+        page: 1,
+        pageSize: 100,
+        search: "",
+        userId: "",
+        year: 2025,
+        month: 0,
+        startDate: "",
+        endDate: "",
+      };
+      return getOrders(formData);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const results = response?.results?.orders || [];
   return (
     <>
       <Header />

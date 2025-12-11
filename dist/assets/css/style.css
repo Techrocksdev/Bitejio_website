@@ -761,13 +761,6 @@
   background-color: var(--light-main-2);
 }
 
-.order-confirmed-bg-wrapper {
-  height: 233px;
-  background-image: url(../image/bg/bg-confirmed.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 .order-confirmed-bg-wrapper .confirm-message {
   display: flex;
   flex-direction: column;
@@ -1111,4 +1104,18 @@ button {
 .add-btn2 {
   width: 30%;
   text-align: center;
+}
+.location .dropdown-menu {
+  opacity: 0;
+  transform: scale(0.95) translateY(-10px);
+  transform-origin: top center;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  visibility: hidden;
+  display: block !important;
+}
+
+.location .dropdown-menu.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  visibility: visible;
 }

@@ -32,7 +32,7 @@ function Products() {
     data: response2,
     isLoading: isLoading2,
     isFetching,
-    refetch,
+    refetch: refetch2,
   } = useQuery({
     queryKey: ["productList", id, subCat],
     queryFn: async () => {
@@ -214,7 +214,7 @@ function Products() {
               </>
             ) : products?.length ? (
               products?.map((item) => (
-                <ProductCard item={item} refetch={refetch} />
+                <ProductCard item={item} refetch2={refetch2} />
               ))
             ) : (
               <div className="mt-5 no-data mx-auto d-flex flex-column justify-content-center align-items-center">
