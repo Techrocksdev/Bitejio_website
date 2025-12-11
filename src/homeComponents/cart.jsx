@@ -75,7 +75,7 @@ function Cart() {
     }
   };
   const handlePaymentChange = (e) => {
-    setSelectedPayment(e.target.value);
+    setSelectedPayment(Number(e.target.value));
   };
   const totalPrice = cart?.products?.reduce((sum, item) => {
     return sum + item.variantId.price * item.quantity;
@@ -85,6 +85,10 @@ function Cart() {
     return sum + (item.variantId.discountPrice || 0) * item.quantity;
   }, 0);
   const onSubmit = async () => {
+    if (!addDetail?.address_line1) {
+      showGlobalAlert("Please select address", "error");
+      return;
+    }
     const address = {
       address_line1: addDetail?.address_line1,
       address_line2: addDetail?.address_line2,
@@ -201,16 +205,16 @@ function Cart() {
                               </div>
                             </div>
                             <div className="col-12 col-md-5 col-lg-6 d-flex align-items-center justify-content-end gap-2">
-                              <div className="add-btn">
+                              <div className="add-btn add-btn2">
                                 <button
                                   onClick={() => updateQuantity(item, -1)}
                                   disabled={item?.quantity <= 1}
                                 >
-                                  -
+                                  <i className="fa fa-minus"></i>
                                 </button>
                                 <button>{item?.quantity}</button>
                                 <button onClick={() => updateQuantity(item, 1)}>
-                                  +
+                                  <i className="fa fa-plus"></i>
                                 </button>
                               </div>
                               <div
@@ -338,7 +342,7 @@ function Cart() {
                           <input
                             type="radio"
                             name="payment-method"
-                            value="20-percent"
+                            value={20}
                             checked={selectedPayment === 20}
                             onChange={handlePaymentChange}
                             className="custom-radio"
@@ -355,7 +359,7 @@ function Cart() {
                           <input
                             type="radio"
                             name="payment-method"
-                            value="100-percent"
+                            value={100}
                             checked={selectedPayment === 100}
                             onChange={handlePaymentChange}
                             className="custom-radio"
@@ -372,7 +376,7 @@ function Cart() {
                           <input
                             type="radio"
                             name="payment-method"
-                            value="cod"
+                            value={0}
                             checked={selectedPayment === 0}
                             onChange={handlePaymentChange}
                             className="custom-radio"

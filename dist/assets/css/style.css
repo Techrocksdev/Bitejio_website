@@ -1105,3 +1105,10 @@ button {
   border: 2px solid var(--main) !important;
   background-color: var(--light-main-2);
 }
+.dropdown-item {
+  white-space: normal !important;
+}
+.add-btn2 {
+  width: 30%;
+  text-align: center;
+}

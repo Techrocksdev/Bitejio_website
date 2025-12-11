@@ -5,6 +5,7 @@ import { RotatingLines } from "react-loader-spinner";
 import { useForm } from "react-hook-form";
 import {
   addAddress,
+  changeDefaultAddress,
   deleteAddress,
   getMyAddresses,
   updateAddress,
@@ -13,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-function AddressCart({ setAddDetail, addDetail }) {
+function AddressCart({ setAddDetail }) {
   const savedLocation = JSON.parse(sessionStorage.getItem("userLocation"));
   const [isloading, setIsLoading] = useState(false);
   const [type, setType] = useState("Home");
@@ -58,7 +59,12 @@ function AddressCart({ setAddDetail, addDetail }) {
 
   const address = response?.results?.addresses;
   useEffect(() => {
-    setAddDetail(address?.[0]);
+    if (address && address?.length > 0) {
+      const defaultAddress = address.find((item) => item.isDefault === true);
+      if (defaultAddress) {
+        setAddDetail(defaultAddress);
+      }
+    }
   }, [address]);
 
   const onSubmit = async (data) => {
@@ -241,6 +247,20 @@ function AddressCart({ setAddDetail, addDetail }) {
       console.log("An error occurred");
     }
   };
+  const defaultAdd = async (id) => {
+    try {
+      const response = await changeDefaultAddress(id);
+      if (!response.error) {
+        showGlobalAlert(response.message, "success");
+        refetch();
+      } else {
+        showGlobalAlert(response.message, "error");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      console.log("An error occurred");
+    }
+  };
 
   return (
     <>
@@ -270,12 +290,13 @@ function AddressCart({ setAddDetail, addDetail }) {
                 style={{ cursor: "pointer" }}
                 key={item._id}
                 className={
-                  item.isDefault || addDetail?._id === item._id
+                  item.isDefault
                     ? "border rounded px-3 py-3 mb-3 d_active"
                     : "border rounded px-3 py-3 mb-3"
                 }
                 onClick={() => {
                   setAddDetail(item);
+                  defaultAdd(item._id);
                 }}
               >
                 <div className="row align-items-center">

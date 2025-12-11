@@ -188,6 +188,33 @@ export async function addAddress(formData) {
   }
 }
 
+export async function getMySearchHistory(formData) {
+  try {
+    const { data } = await webHttpService.patch(
+      `${import.meta.env.VITE_APIENDPOINT}/user/getMySearchHistory`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+export async function searchLocation(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/user/searchLocation`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+
 export async function updateAddress(formData) {
   try {
     const { data } = await webHttpService.put(
@@ -205,6 +232,18 @@ export async function deleteAddress(id) {
   try {
     const { data } = await webHttpService.delete(
       `${import.meta.env.VITE_APIENDPOINT}/user/deleteAddress/${id}`
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
+export async function changeDefaultAddress(id) {
+  try {
+    const { data } = await webHttpService.get(
+      `${import.meta.env.VITE_APIENDPOINT}/user/changeDefaultAddress/${id}`
     );
     console.log(data);
 

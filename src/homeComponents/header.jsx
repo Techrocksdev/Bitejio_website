@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import {
+  getMySearchHistory,
+  searchLocation,
   sendOtpSignup,
-  userLogin,
   verifyOTP,
 } from "../apiServices/home/homeHttpService";
 import OTPTimer from "../commonComponents/OTPTimer";
@@ -12,6 +13,7 @@ import { RotatingLines } from "react-loader-spinner";
 import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../commonComponents/authContext";
+import { useQuery } from "@tanstack/react-query";
 
 function Header() {
   const {
@@ -32,29 +34,36 @@ function Header() {
   } = useForm({
     mode: "onChange",
   });
-  const {
-    handleSubmit: handleSubmit2,
-    reset: reset2,
-    control: control2,
-    formState: { errors: errors2 },
-  } = useForm({
-    mode: "onChange",
-  });
 
   const [loader, setLoader] = useState(false);
   const [isloading, setIsLoading] = useState(false);
   const [locationData, setLocationData] = useState(null);
-  const token = localStorage.getItem("token-bit-user");
+  const [type, setType] = useState("");
+  const { refetch, token, logout, login } = useUserAuth();
+  const savedLocation = sessionStorage.getItem("userLocation");
   const navigate = useNavigate();
-  const { refetch } = useUserAuth();
 
   useEffect(() => {
-    const savedLocation = sessionStorage.getItem("userLocation");
     if (savedLocation) {
       const parsedLocation = JSON.parse(savedLocation);
       setLocationData(parsedLocation);
     }
-  }, []);
+  }, [savedLocation]);
+
+  const { data: response, refetch: refetch2 } = useQuery({
+    queryKey: ["recentLocList"],
+    enabled: !!token,
+    queryFn: async () => {
+      const formData = {
+        page: 1,
+        pageSize: 1000,
+        type: "Location",
+      };
+      return getMySearchHistory(formData);
+    },
+  });
+
+  const recentLocation = response?.results?.history;
 
   const getCurrentLocation = () => {
     return new Promise((resolve, reject) => {
@@ -131,7 +140,7 @@ function Header() {
       const addressData = await getAddressFromCoords(latitude, longitude);
       setLocationData(addressData);
       sessionStorage.setItem("userLocation", JSON.stringify(addressData));
-
+      token ? searchLoc(addressData) : "";
       return addressData;
     } catch (error) {
       console.error("❌ Location error:", error);
@@ -207,42 +216,17 @@ function Header() {
       const response = await verifyOTP(formData);
 
       if (!response.error) {
-        localStorage.setItem("token-bit-user", response.results.token);
+        login(response.results.token);
         showGlobalAlert(response.message, "success");
         document.getElementById("closeOtpModal").click();
         refetch();
+        locationData ? searchLoc(locationData) : "";
       } else {
         showGlobalAlert(response.message, "error");
       }
       // eslint-disable-next-line no-unused-vars
     } catch (error) {
       console.log("An error occurred");
-    } finally {
-      setLoader(false);
-    }
-  };
-  const onSubmit2 = async (data) => {
-    setLoader(true);
-    data.countryCode = data.phoneNumber.countryCode;
-    data.phoneNumber = data.phoneNumber.phoneNumber;
-    data.fcmToken = localStorage.getItem("fcmTokenBit");
-    data.deviceId = localStorage.getItem("uid-bit-user");
-    data.deviceOS = "web";
-
-    try {
-      const response = await userLogin(data);
-      console.log(response);
-      if (!response.error) {
-        localStorage.setItem("token-bit-user", response.results.token);
-        showGlobalAlert(response.message, "success");
-        document.getElementById("closeLoginModal").click();
-        refetch();
-      } else {
-        showGlobalAlert(response.message, "error");
-      }
-      // eslint-disable-next-line no-unused-vars
-    } catch (error) {
-      console.log("An error occurred", error);
     } finally {
       setLoader(false);
     }
@@ -277,10 +261,22 @@ function Header() {
       console.log("An error occurred");
     }
   };
-  const logout = useCallback(() => {
-    localStorage.removeItem("token-bit-user");
-    navigate("/");
-  }, [navigate]);
+  const searchLoc = async (add) => {
+    const formData = {
+      address: add,
+    };
+    try {
+      const response = await searchLocation(formData);
+      if (!response.error) {
+        refetch2();
+      } else {
+        showGlobalAlert(response.message, "error");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      console.log("An error occurred");
+    }
+  };
 
   return (
     <>
@@ -358,28 +354,75 @@ function Header() {
                         </div>
                       </Link>
                     </li>
+                    {token && recentLocation?.length ? (
+                      <>
+                        <li>
+                          <a
+                            className="dropdown-item my-2 "
+                            style={{ fontWeight: "500" }}
+                          >
+                            Recent Locations
+                          </a>
+                        </li>
+                        {recentLocation?.map((item) => (
+                          <li>
+                            <Link
+                              className="dropdown-item"
+                              to=""
+                              key={item._id}
+                              onClick={() => {
+                                setLocationData(item.address);
+                                sessionStorage.setItem(
+                                  "userLocation",
+                                  JSON.stringify(item.address)
+                                );
+                              }}
+                            >
+                              <i class="fas fa-clock me-2"></i>
+                              {item?.address?.formattedShort}{" "}
+                            </Link>
+                          </li>
+                        ))}
+                      </>
+                    ) : (
+                      ""
+                    )}
                     <li>
-                      <a
-                        className="dropdown-item my-2 "
-                        style={{ fontWeight: "500" }}
+                      <Link
+                        className="dropdown-item"
+                        to=""
+                        onClick={() => {
+                          setLocationData({
+                            fullAddress:
+                              "123 Demo Street, Sample Nagar, Test City, Test State, 123456",
+                            locality: "Sample Nagar",
+                            city: "Test City",
+                            state: "Test State",
+                            country: "Testland",
+                            postcode: "123456",
+                            formattedShort:
+                              "Sample Nagar, Test City, Test State",
+                            coordinates: { lat: 28.6139, lng: 77.209 },
+                          });
+                          sessionStorage.setItem(
+                            "userLocation",
+                            JSON.stringify({
+                              fullAddress:
+                                "123 Demo Street, Sample Nagar, Test City, Test State, 123456",
+                              locality: "Sample Nagar",
+                              city: "Test City",
+                              state: "Test State",
+                              country: "Testland",
+                              postcode: "123456",
+                              formattedShort:
+                                "Sample Nagar, Test City, Test State",
+                              coordinates: { lat: 28.6139, lng: 77.209 },
+                            })
+                          );
+                        }}
                       >
-                        Recent Locations
-                      </a>
-                    </li>
-
-                    <li>
-                      <Link className="dropdown-item" to="">
-                        <i class="fas fa-clock me-2"></i> B block Street no. 10
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="">
-                        <i class="fas fa-clock me-2"></i> Sector 21, Noida
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="">
-                        <i class="fas fa-clock me-2"></i> Connaught Place, Delhi
+                        <i class="fas fa-clock me-2"></i>
+                        Sample Nagar, Test City, Test State
                       </Link>
                     </li>
                   </ul>
@@ -513,7 +556,9 @@ function Header() {
                             className="dropdown-item"
                             onClick={(e) => {
                               e.preventDefault();
+                              setLocationData(null);
                               logout();
+                              navigate("/");
                             }}
                           >
                             Log Out
@@ -537,7 +582,8 @@ function Header() {
                     <button
                       className="border-0 bg-transparent text-white"
                       data-bs-toggle="modal"
-                      data-bs-target="#login"
+                      data-bs-target="#addressModal"
+                      onClick={() => setType(1)}
                     >
                       Login
                     </button>
@@ -546,6 +592,7 @@ function Header() {
                       className="signup btn-comman"
                       data-bs-toggle="modal"
                       data-bs-target="#addressModal"
+                      onClick={() => setType(2)}
                     >
                       Sign up
                     </a>
@@ -582,7 +629,9 @@ function Header() {
               width={100}
               className="mx-auto mb-3"
             />
-            <h5 className="mb-3 modal-heading">Sign Up</h5>
+            <h5 className="mb-3 modal-heading">
+              {type === 2 ? "Sign Up" : "Login"}
+            </h5>
             <label className="form-label fw-semibold">
               Phone Number <span className="text-danger">*</span>
             </label>
@@ -850,98 +899,7 @@ function Header() {
           </form>
         </div>
       </div>
-      {/* Login Modal  */}
-      <div className="modal fade" id="login" tabIndex={-1} aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered modal-width">
-          <button
-            type="button"
-            className="d-none"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            id="closeLoginModal"
-            onClick={() => {
-              reset2();
-            }}
-          ></button>
-          <form
-            className="modal-content  p-4"
-            onSubmit={handleSubmit2(onSubmit2)}
-          >
-            <img
-              src="../../assets/image/icons/bike.svg"
-              alt="Delivery"
-              width={100}
-              className="mx-auto mb-3"
-            />
-            <h5 className="mb-3 modal-heading">Login</h5>
-            <label className="form-label fw-semibold">
-              Phone Number <span className="text-danger">*</span>
-            </label>
-            <Controller
-              className={`form-control border border-2 mb-3 ${
-                errors2.phoneNumber ? "input-error" : ""
-              }`}
-              name="phoneNumber"
-              control={control2}
-              rules={{ required: "Phone number is required" }}
-              render={({ field }) => (
-                <PhoneInput
-                  placeholder="Enter Mobile No."
-                  country={"us"}
-                  inputClass={`form-control ${
-                    errors2.phoneNumber ? "input-error" : ""
-                  }`}
-                  inputStyle={{
-                    padding: "unset",
-                    paddingLeft: "48px",
-                  }}
-                  inputProps={{
-                    placeholder: "Enter Mobile No.",
-                  }}
-                  value={
-                    field?.value?.phoneNumber
-                      ? `${field?.value?.countryCode}${field?.value?.phoneNumber}`
-                      : ""
-                  }
-                  onChange={(value, countryData) => {
-                    const phoneNumberWithoutCountry = value.slice(
-                      countryData.dialCode.length
-                    );
 
-                    field.onChange({
-                      phoneNumber: phoneNumberWithoutCountry,
-                      countryCode: `+${countryData.dialCode}`,
-                    });
-                  }}
-                />
-              )}
-            />
-            {errors2.phoneNumber && (
-              <p className="form-error">{errors2.phoneNumber.message}</p>
-            )}
-            <button
-              type="submit"
-              className="comman-btn-main rounded-pill mx-auto mt-3"
-              disabled={loader}
-            >
-              {loader ? (
-                <>
-                  <span className="me-2">Wait...</span>
-                  <RotatingLines
-                    strokeColor="white"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    width="20"
-                    visible={true}
-                  />
-                </>
-              ) : (
-                "Login"
-              )}
-            </button>
-          </form>
-        </div>
-      </div>
       <div
         className="d-none"
         id="otpModalOpen"

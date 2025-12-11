@@ -6,11 +6,55 @@ import {
 } from "../apiServices/home/homeHttpService";
 import { RotatingLines } from "react-loader-spinner";
 import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
+import { useUserAuth } from "../commonComponents/authContext";
 
 function ProductCard({ item, refetch, home }) {
   const [variantId, setVariantId] = useState("");
   const [loader, setLoader] = useState(false);
-  const token = localStorage.getItem("token-bit-user");
+  const { token } = useUserAuth();
+
+  const flyToCart = (imageUrl) => {
+    const productImg = document.querySelector(`#product-img-${item._id}`);
+    const cartIcon = document.querySelector(".addToCart");
+
+    if (!productImg || !cartIcon) {
+      console.log("Product image or cart icon not found");
+      return;
+    }
+
+    const productRect = productImg.getBoundingClientRect();
+    const cartRect = cartIcon.getBoundingClientRect();
+    const flyingImg = document.createElement("img");
+    flyingImg.src = imageUrl;
+    flyingImg.style.cssText = `
+      position: fixed;
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      z-index: 9999;
+      left: ${productRect.left}px;
+      top: ${productRect.top}px;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    `;
+
+    document.body.appendChild(flyingImg);
+
+    setTimeout(() => {
+      flyingImg.style.left = `${cartRect.left}px`;
+      flyingImg.style.top = `${cartRect.top}px`;
+      flyingImg.style.width = "20px";
+      flyingImg.style.height = "20px";
+      flyingImg.style.opacity = "0";
+    }, 50);
+    setTimeout(() => {
+      if (document.body.contains(flyingImg)) {
+        document.body.removeChild(flyingImg);
+      }
+    }, 900);
+  };
 
   const addCart = async () => {
     if (!variantId) {
@@ -30,8 +74,13 @@ function ProductCard({ item, refetch, home }) {
         document
           .querySelector(`#cartModal${item._id} [data-bs-dismiss="modal"]`)
           .click();
-        showGlobalAlert(response.message, "success");
-        refetch();
+        setTimeout(() => {
+          flyToCart(item?.images?.[0]);
+          setTimeout(() => {
+            showGlobalAlert(response.message, "success");
+            refetch();
+          }, 2000);
+        }, 300);
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -45,9 +94,9 @@ function ProductCard({ item, refetch, home }) {
   const updateQuantity = async (item, change, e) => {
     e.preventDefault();
 
-    const newQuantity = item.quantity + change;
+    const newQuantity = item.cartQuantity + change;
 
-    if (newQuantity < 1) return;
+    if (newQuantity < 0) return;
 
     const formData = {
       productId: item._id,
@@ -81,7 +130,11 @@ function ProductCard({ item, refetch, home }) {
             data-wow-delay="0.2s"
           >
             <div className="custom-card-header">
-              <img src={item?.images?.[0]} alt="" />
+              <img
+                id={`product-img-${item._id}`}
+                src={item?.images?.[0]}
+                alt=""
+              />
             </div>
             <div className="custom-card-body">
               <h2>{item?.name_en}</h2>
@@ -101,18 +154,18 @@ function ProductCard({ item, refetch, home }) {
                     <p className="text">30-40 min</p>
                   </div>
                   {token ? (
-                    item?.isAddedInCart && item.quantity > 0 ? (
+                    item?.isAddedInCart && item.cartQuantity > 0 ? (
                       <div className="d-flex align-items-center">
                         <div className="add-btn">
                           <button
                             onClick={(e) => updateQuantity(item, -1, e)}
-                            disabled={item?.quantity <= 0}
+                            disabled={item?.cartQuantity <= 0}
                           >
-                            -
+                            <i className="fa fa-minus"></i>
                           </button>
-                          <button>{item?.quantity}</button>
+                          <button>{item?.cartQuantity}</button>
                           <button onClick={(e) => updateQuantity(item, 1, e)}>
-                            +
+                            <i className="fa fa-plus"></i>
                           </button>
                         </div>
                       </div>
@@ -135,7 +188,7 @@ function ProductCard({ item, refetch, home }) {
                     <button
                       className="comman-btn-main w-fit"
                       data-bs-toggle="modal"
-                      data-bs-target="#login"
+                      data-bs-target="#addressModal"
                       onClick={(e) => {
                         e.preventDefault();
                       }}

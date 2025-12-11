@@ -19,6 +19,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useUserAuth } from "../commonComponents/authContext";
 
 function ProductDetails() {
   let { id } = useParams();
@@ -26,7 +27,7 @@ function ProductDetails() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [variantId, setVariantId] = useState("");
   const [loader, setLoader] = useState(false);
-  const token = localStorage.getItem("token-bit-user");
+  const { token } = useUserAuth();
 
   const {
     data: details,
@@ -168,9 +169,9 @@ function ProductDetails() {
   const updateQuantity = async (item, change, e) => {
     e.preventDefault();
 
-    const newQuantity = item.quantity + change;
+    const newQuantity = item.cartQuantity + change;
 
-    if (newQuantity < 1) return;
+    if (newQuantity < 0) return;
 
     const formData = {
       productId: id,
@@ -372,22 +373,22 @@ function ProductDetails() {
                     <div className="d-flex justify-content-md-end mt-4 w-100">
                       <div>
                         {token ? (
-                          details?.isAddedInCart && details.quantity > 0 ? (
+                          details?.isAddedInCart && details.cartQuantity > 0 ? (
                             <div className="d-flex align-detailss-center">
-                              <div className="add-btn">
+                              <div className="add-btn w-100 text-center">
                                 <button
                                   onClick={(e) =>
                                     updateQuantity(details, -1, e)
                                   }
-                                  disabled={details?.quantity <= 0}
+                                  disabled={details?.cartQuantity <= 0}
                                 >
-                                  -
+                                  <i className="fa fa-minus"></i>
                                 </button>
-                                <button>{details?.quantity}</button>
+                                <button>{details?.cartQuantity}</button>
                                 <button
                                   onClick={(e) => updateQuantity(details, 1, e)}
                                 >
-                                  +
+                                  <i className="fa fa-plus"></i>
                                 </button>
                               </div>
                             </div>
@@ -407,7 +408,7 @@ function ProductDetails() {
                           <button
                             className="comman-btn-main w-100"
                             data-bs-toggle="modal"
-                            data-bs-target="#login"
+                            data-bs-target="#addressModal"
                             onClick={(e) => {
                               e.preventDefault();
                             }}

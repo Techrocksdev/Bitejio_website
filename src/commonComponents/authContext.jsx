@@ -5,7 +5,10 @@ import { getMyProfile } from "../apiServices/home/homeHttpService";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const token = localStorage.getItem("token-bit-user");
+  const [token, setToken] = useState(() =>
+    localStorage.getItem("token-bit-user")
+  );
+
   // const [isSidebarHidden, setIsSidebarHidden] = useState(false);
 
   const { data: profile, refetch } = useQuery({
@@ -18,6 +21,18 @@ export const AuthProvider = ({ children }) => {
     select: (data) => data.results.user,
   });
 
+  const login = (newToken) => {
+    localStorage.setItem("token-bit-user", newToken);
+    setToken(newToken);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token-bit-user");
+    localStorage.removeItem("uid-bit-user");
+    sessionStorage.removeItem("userLocation");
+    setToken(null);
+  };
+
   // const toggleSidebar = () => {
   //   setIsSidebarHidden((prev) => !prev);
   // };
@@ -27,6 +42,9 @@ export const AuthProvider = ({ children }) => {
       value={{
         profile,
         refetch,
+        login,
+        logout,
+        token,
         // toggleSidebar,
         // isSidebarHidden,
       }}
