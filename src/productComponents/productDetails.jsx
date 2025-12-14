@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   addToCart,
-  getProduct,
+  getSimilarProduct,
   updateCartQuantity,
   viewProduct,
 } from "../apiServices/home/homeHttpService";
@@ -92,10 +92,9 @@ function ProductDetails() {
       const formData = {
         page: 1,
         pageSize: 1000,
-        categoryId: "",
         search: "",
       };
-      return getProduct(formData);
+      return getSimilarProduct(formData);
     },
     onError: (error) => {
       console.log(error);

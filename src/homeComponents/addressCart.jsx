@@ -300,34 +300,49 @@ function AddressCart({ setAddDetail }) {
                 }}
               >
                 <div className="row align-items-center">
+                  <div className="col-auto pe-0">
+                    <input
+                      key={item._id}
+                      type="radio"
+                      checked={item.isDefault}
+                      className="custom-radio"
+                    ></input>
+                  </div>
                   <div className="col">
-                    {item.type}
-                    <img
-                      src="assets/image/icons/HouseLine.svg"
-                      alt=""
-                      className="ms-2"
-                    />
-                  </div>
-                  <div
-                    className="col-auto pe-0"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addAddressModal"
-                    onClick={() => setDetails(item)}
-                  >
-                    <Link to="">
-                      <img src="assets/image/icons/bxs_edit.svg" alt="" />
-                    </Link>
-                  </div>
-                  <div className="col-auto" onClick={() => removeAdd(item._id)}>
-                    <Link>
-                      <img src="assets/image/icons/Trash.svg" alt="" />
-                    </Link>
+                    <div className="row">
+                      <div className="col">
+                        {item.type}
+                        <img
+                          src="assets/image/icons/HouseLine.svg"
+                          alt=""
+                          className="ms-2"
+                        />
+                      </div>
+                      <div
+                        className="col-auto pe-0"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addAddressModal"
+                        onClick={() => setDetails(item)}
+                      >
+                        <Link to="">
+                          <img src="assets/image/icons/bxs_edit.svg" alt="" />
+                        </Link>
+                      </div>
+                      <div
+                        className="col-auto"
+                        onClick={() => removeAdd(item._id)}
+                      >
+                        <Link>
+                          <img src="assets/image/icons/Trash.svg" alt="" />
+                        </Link>
+                      </div>
+                      <p className="mb-0 fw-medium">
+                        {item.address_line2} <br />
+                        {item.address_line1}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <p className="mb-0 fw-medium">
-                  {item.address_line2} <br />
-                  {item.address_line1}
-                </p>
               </div>
             ))
           ) : (

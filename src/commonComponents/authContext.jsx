@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() =>
     localStorage.getItem("token-bit-user")
   );
+  const [search, setSearch] = useState("");
 
   // const [isSidebarHidden, setIsSidebarHidden] = useState(false);
 
@@ -33,9 +34,9 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
   };
 
-  // const toggleSidebar = () => {
-  //   setIsSidebarHidden((prev) => !prev);
-  // };
+  const searchPro = (search) => {
+    setSearch(search);
+  };
 
   return (
     <AuthContext.Provider
@@ -45,8 +46,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         token,
-        // toggleSidebar,
-        // isSidebarHidden,
+        searchPro,
+        search,
       }}
     >
       {children}

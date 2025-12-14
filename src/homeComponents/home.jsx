@@ -194,10 +194,10 @@ function Home() {
               <p>when you order food worth ₹599 or more</p>
               <button className="comman-btn-main">Grab the Offer</button>
             </div>
-            <button className="slide-btn prev">
+            <button className="slide-btn prevv">
               <img src="assets/image/icons/angle-left.svg" alt="" />
             </button>
-            <button className="slide-btn next">
+            <button className="slide-btn nextt">
               <img src="assets/image/icons/angle-right.svg" alt="" />
             </button>
           </div>

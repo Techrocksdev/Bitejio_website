@@ -82,6 +82,19 @@ export async function getProduct(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+export async function getSimilarProduct(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/products/getSimilarProduct`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
 export async function viewProduct(id) {
   try {
     const { data } = await webHttpService.get(

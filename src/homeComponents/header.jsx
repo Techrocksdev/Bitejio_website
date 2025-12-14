@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -11,7 +11,7 @@ import {
 import OTPTimer from "../commonComponents/OTPTimer";
 import { RotatingLines } from "react-loader-spinner";
 import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../commonComponents/authContext";
 import { useQuery } from "@tanstack/react-query";
 
@@ -39,9 +39,19 @@ function Header() {
   const [isloading, setIsLoading] = useState(false);
   const [locationData, setLocationData] = useState(null);
   const [type, setType] = useState("");
-  const { refetch, token, logout, login, profile } = useUserAuth();
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const { refetch, token, logout, login, profile, searchPro, search } =
+    useUserAuth();
   const savedLocation = sessionStorage.getItem("userLocation");
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.includes("/search")) {
+      inputRef.current?.focus();
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     if (savedLocation) {
@@ -51,13 +61,13 @@ function Header() {
   }, [savedLocation]);
 
   const { data: response, refetch: refetch2 } = useQuery({
-    queryKey: ["recentLocList"],
+    queryKey: ["recentLocList", isDropdownVisible],
     enabled: !!token,
     queryFn: async () => {
       const formData = {
         page: 1,
         pageSize: 1000,
-        type: "Location",
+        type: isDropdownVisible ? "Keyword" : "Location",
       };
       return getMySearchHistory(formData);
     },
@@ -387,55 +397,47 @@ function Header() {
                     ) : (
                       ""
                     )}
-                    <li>
-                      <Link
-                        className="dropdown-item"
-                        to=""
-                        onClick={() => {
-                          setLocationData({
-                            fullAddress:
-                              "123 Demo Street, Sample Nagar, Test City, Test State, 123456",
-                            locality: "Sample Nagar",
-                            city: "Test City",
-                            state: "Test State",
-                            country: "Testland",
-                            postcode: "123456",
-                            formattedShort:
-                              "Sample Nagar, Test City, Test State",
-                            coordinates: { lat: 28.6139, lng: 77.209 },
-                          });
-                          sessionStorage.setItem(
-                            "userLocation",
-                            JSON.stringify({
-                              fullAddress:
-                                "123 Demo Street, Sample Nagar, Test City, Test State, 123456",
-                              locality: "Sample Nagar",
-                              city: "Test City",
-                              state: "Test State",
-                              country: "Testland",
-                              postcode: "123456",
-                              formattedShort:
-                                "Sample Nagar, Test City, Test State",
-                              coordinates: { lat: 28.6139, lng: 77.209 },
-                            })
-                          );
-                        }}
-                      >
-                        <i class="fas fa-clock me-2"></i>
-                        Sample Nagar, Test City, Test State
-                      </Link>
-                    </li>
                   </ul>
                 </div>
               </div>
               <div className="col-12 order-4 order-md-4 order-xl-3 col-md-6 col-lg-3 col-xl-4">
                 {/* Search */}
                 <div className="search-box">
-                  <input
-                    type="text"
-                    placeholder="Discover restaurants, cuisines, or dishes"
-                    id="search"
-                  />
+                  {location.pathname.includes("/search") ? (
+                    <input
+                      type="text"
+                      placeholder="Discover restaurants, cuisines, or dishes"
+                      id="search"
+                      ref={inputRef}
+                      onChange={(e) => {
+                        searchPro(e.target.value);
+                        if (!e.target.value && token) {
+                          setIsDropdownVisible(true);
+                        } else {
+                          setIsDropdownVisible(false);
+                        }
+                      }}
+                      value={search}
+                      className="input-field"
+                      onFocus={() => {
+                        if (!search && token) {
+                          setIsDropdownVisible(true);
+                        }
+                      }}
+                      onBlur={() => {
+                        setTimeout(() => setIsDropdownVisible(false), 200);
+                      }}
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder="Discover restaurants, cuisines, or dishes"
+                      id="search"
+                      ref={inputRef}
+                      onClick={() => navigate("/search")}
+                    />
+                  )}
+
                   <span className="search-icon">
                     <img
                       src="../../assets/image/icons/MagnifyingGlass.svg"
@@ -443,74 +445,35 @@ function Header() {
                     />
                   </span>
                   <div
-                    className="search-dropdown-content d-none"
+                    className={`search-dropdown-content ${
+                      isDropdownVisible ? "" : "d-none"
+                    }`}
                     id="search-dropdown"
+                    onClick={(e) => e.preventDefault()}
                   >
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="../../assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="../../assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="../../assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="../../assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
-                    <div className="search-dropdown-content-item">
-                      <div className="img">
-                        <img
-                          src="../../assets/image/products/p-1.png"
-                          className="w-100 h-100 object-fit-cover"
-                          alt=""
-                        />
-                      </div>
-                      <div className="text-area">
-                        <h2>Matar Paneer</h2>
-                        <p>Royal Kitchen</p>
-                      </div>
-                    </div>
+                    {token && recentLocation?.length ? (
+                      <>
+                        {recentLocation?.map((item) => (
+                          <div className="search-dropdown-content-item">
+                            <div
+                              className="text-area"
+                              key={item._id}
+                              onClick={() => {
+                                searchPro(item.search);
+                              }}
+                            >
+                              <h2>
+                                {" "}
+                                <i class="fas fa-search me-2"></i>
+                                {item.search}
+                              </h2>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>

@@ -182,6 +182,13 @@ body {
 .slide-btn.next {
   right: -70px;
 }
+.slide-btn.prevv {
+  left: -32px;
+}
+
+.slide-btn.nextt {
+  right: -32px;
+}
 
 .heading {
   color: var(--black);
