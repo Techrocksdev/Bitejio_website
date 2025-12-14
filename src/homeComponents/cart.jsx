@@ -106,7 +106,7 @@ function Cart() {
       type: addDetail?.type,
     };
     const products = cart?.products?.map((item) => ({
-      cartId: cart?._id,
+      cartId: item?._id,
       productId: item.productId._id,
       variantId: item.variantId._id,
       merchantId: item.userId,

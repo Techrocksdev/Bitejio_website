@@ -7,6 +7,7 @@ import {
 import { RotatingLines } from "react-loader-spinner";
 import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
 import { useUserAuth } from "../commonComponents/authContext";
+import { createPortal } from "react-dom";
 
 function ProductCard({ item, refetch2, home }) {
   const [variantId, setVariantId] = useState("");
@@ -67,7 +68,6 @@ function ProductCard({ item, refetch2, home }) {
       variantId: variantId,
       quantity: 1,
     };
-
     try {
       const response = await addToCart(formData);
       if (!response.error) {
@@ -76,9 +76,6 @@ function ProductCard({ item, refetch2, home }) {
           .click();
         showGlobalAlert(response.message, "success");
         await Promise.all([refetch(), refetch2()]);
-        setTimeout(() => {
-          flyToCart(item?.images?.[0]);
-        }, 300);
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -106,8 +103,7 @@ function ProductCard({ item, refetch2, home }) {
       const response = await updateCartQuantity(formData);
       if (!response.error) {
         showGlobalAlert(response.message, "success");
-        refetch();
-        refetch2();
+        await Promise.all([refetch(), refetch2()]);
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -116,6 +112,77 @@ function ProductCard({ item, refetch2, home }) {
       console.log("An error occurred");
     }
   };
+  const modalContent = (
+    <div
+      className="modal fade"
+      id={`cartModal${item?._id}`}
+      tabIndex={-1}
+      aria-hidden="true"
+      data-bs-backdrop="static"
+    >
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2 className="modal-heading m-0">Customise as per your taste</h2>
+          </div>
+
+          <div className="modal-body">
+            <div className="list-group">
+              {item?.variants?.map((itm) => (
+                <label
+                  key={itm._id}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <div>
+                    <input
+                      className="form-check-input me-2"
+                      type="radio"
+                      name={itm._id}
+                      onChange={() => setVariantId(itm._id)}
+                      checked={variantId === itm._id}
+                    />
+                    {itm?.combination?.[0]?.attributeId?.name_en} (
+                    {itm?.combination?.[0]?.valueId?.name_en})
+                  </div>
+                  <span className="fw-bold">₹{itm.price}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className="d-flex justify-content-end gap-2 mt-4">
+              <button
+                className="btn btn-light border"
+                data-bs-dismiss="modal"
+                onClick={() => setVariantId("")}
+              >
+                Cancel
+              </button>
+              <button
+                className="comman-btn-main"
+                onClick={() => addCart()}
+                disabled={loader}
+              >
+                {loader ? (
+                  <>
+                    <span className="me-2">Wait...</span>
+                    <RotatingLines
+                      strokeColor="white"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="20"
+                      visible={true}
+                    />
+                  </>
+                ) : (
+                  "Add to Cart"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -123,17 +190,19 @@ function ProductCard({ item, refetch2, home }) {
         key={item?._id}
         className={home ? "me-4" : "col-md-4 col-lg-4 col-xl-4"}
       >
-        <Link to={`/product-details/${item?._id}`}>
+        <div>
           <div
             className="custom-card wow animate__animated animate__fadeInUp"
             data-wow-delay="0.2s"
           >
             <div className="custom-card-header">
-              <img
-                id={`product-img-${item._id}`}
-                src={item?.images?.[0]}
-                alt=""
-              />
+              <Link to={`/product-details/${item?._id}`}>
+                <img
+                  id={`product-img-${item._id}`}
+                  src={item?.images?.[0]}
+                  alt=""
+                />
+              </Link>
             </div>
             <div className="custom-card-body">
               <h2>{item?.name_en}</h2>
@@ -202,78 +271,10 @@ function ProductCard({ item, refetch2, home }) {
               </div>
             </div>
           </div>
-        </Link>
-      </div>
-
-      <div
-        className="modal fade"
-        id={`cartModal${item?._id}`}
-        tabIndex={-1}
-        aria-hidden="true"
-        data-bs-backdrop="static"
-      >
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2 className="modal-heading m-0">Customise as per your taste</h2>
-            </div>
-
-            <div className="modal-body">
-              <div className="list-group">
-                {item?.variants?.map((itm) => (
-                  <label
-                    key={itm._id}
-                    className="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <input
-                        className="form-check-input me-2"
-                        type="radio"
-                        name={itm._id}
-                        onChange={() => setVariantId(itm._id)}
-                        checked={variantId === itm._id}
-                      />
-                      {itm?.combination?.[0]?.attributeId?.name_en} (
-                      {itm?.combination?.[0]?.valueId?.name_en})
-                    </div>
-                    <span className="fw-bold">₹{itm.price}</span>
-                  </label>
-                ))}
-              </div>
-
-              <div className="d-flex justify-content-end gap-2 mt-4">
-                <button
-                  className="btn btn-light border"
-                  data-bs-dismiss="modal"
-                  onClick={() => setVariantId("")}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="comman-btn-main"
-                  onClick={() => addCart()}
-                  disabled={loader}
-                >
-                  {loader ? (
-                    <>
-                      <span className="me-2">Wait...</span>
-                      <RotatingLines
-                        strokeColor="white"
-                        strokeWidth="5"
-                        animationDuration="0.75"
-                        width="20"
-                        visible={true}
-                      />
-                    </>
-                  ) : (
-                    "Add to Cart"
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+
+      {createPortal(modalContent, document.body)}
     </>
   );
 }

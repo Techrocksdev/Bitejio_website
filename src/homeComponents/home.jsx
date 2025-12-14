@@ -12,7 +12,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function Home() {
-  const { data: response, isLoading } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    refetch: refetch1,
+  } = useQuery({
     queryKey: ["mostPopularList"],
     queryFn: async () => {
       const formData = {
@@ -30,7 +34,11 @@ function Home() {
 
   const popularProducts = response?.results?.products || [];
 
-  const { data: response2, isLoading: isLoading2 } = useQuery({
+  const {
+    data: response2,
+    isLoading: isLoading2,
+    refetch: refetch2,
+  } = useQuery({
     queryKey: ["newProductList"],
     queryFn: async () => {
       const formData = {
@@ -252,7 +260,7 @@ function Home() {
             ) : popularProducts?.length ? (
               <Slider {...sliderSettings}>
                 {popularProducts?.map((item) => (
-                  <ProductCard item={item} home={true} />
+                  <ProductCard item={item} refetch2={refetch1} home={true} />
                 ))}
               </Slider>
             ) : (
@@ -304,7 +312,7 @@ function Home() {
             ) : newProducts?.length ? (
               <Slider {...sliderSettings2}>
                 {newProducts?.map((item) => (
-                  <ProductCard item={item} home={true} />
+                  <ProductCard item={item} refetch2={refetch2} home={true} />
                 ))}
               </Slider>
             ) : (

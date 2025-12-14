@@ -565,7 +565,7 @@ function ProductDetails() {
             ) : similarProducts?.length ? (
               <Slider {...sliderSettings2}>
                 {similarProducts?.map((item) => (
-                  <ProductCard item={item} home={true} refetch2={refetch2} />
+                  <ProductCard item={item} refetch2={refetch2} home={true} />
                 ))}
               </Slider>
             ) : (
