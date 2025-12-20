@@ -108,7 +108,7 @@ function App() {
                 <Route path="/my-profile" element={<Profile />} />
                 <Route path="/my-orders" element={<Orders />} />
                 <Route path="/my-addresses" element={<Addresses />} />
-                <Route path="/order-confirmed" element={<OrderPlaced />} />
+                <Route path="/order-confirmed/:id" element={<OrderPlaced />} />
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

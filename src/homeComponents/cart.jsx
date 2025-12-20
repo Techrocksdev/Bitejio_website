@@ -129,8 +129,7 @@ function Cart() {
       const response = await createOrder(formData);
       if (!response.error) {
         showGlobalAlert(response.message, "success");
-        refetch();
-        navigate("/order-confirmed");
+        navigate(`/order-confirmed/${response.results.order._id}`);
       } else {
         showGlobalAlert(response.message, "error");
       }

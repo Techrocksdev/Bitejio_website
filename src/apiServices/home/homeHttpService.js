@@ -292,3 +292,15 @@ export async function getOrders(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+export async function getOrderDetails(id) {
+  try {
+    const { data } = await webHttpService.get(
+      `${import.meta.env.VITE_APIENDPOINT}/products/getOrderDetails/${id}`
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
