@@ -81,9 +81,11 @@ function Category() {
   };
 
   return (
-    <section className="top-category position-relative">
+    <section className="top-category">
       <div className="container comman-spacing-top-bottom">
-        <h2 className="heading mb-3">Top Categories</h2>
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <h2 className="heading">Top Categories</h2>
+        </div>
         <div className="row justify-content-center g-5">
           {isLoading ? (
             <>

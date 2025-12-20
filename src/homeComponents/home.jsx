@@ -10,6 +10,7 @@ import ProductCard from "../productComponents/productCard";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import BannerSlider from "./homeSlider";
 
 function Home() {
   const {
@@ -186,40 +187,12 @@ function Home() {
   return (
     <>
       <Header />
-      <section
-        className="banner wow animate__animated animate__zoomIn"
-        data-wow-delay="0.3s"
-      >
-        <div className="container comman-spacing-top-bottom">
-          <div className="banner-wrapper">
-            <img src="assets/image/banner/banner-2.png" alt="" />
-            <div className="content">
-              <h1>
-                Get up to <br />
-                <span>50%</span>
-                OFF
-              </h1>
-              <p>when you order food worth ₹599 or more</p>
-              <button className="comman-btn-main">Grab the Offer</button>
-            </div>
-            <button className="slide-btn prevv">
-              <img src="assets/image/icons/angle-left.svg" alt="" />
-            </button>
-            <button className="slide-btn nextt">
-              <img src="assets/image/icons/angle-right.svg" alt="" />
-            </button>
-          </div>
-          <div className="dot-wrapper">
-            <div className="dot active" />
-            <div className="dot" />
-            <div className="dot" />
-          </div>
-        </div>
-      </section>
+      <BannerSlider />
+      <div className="mt-5"></div>
       <Category />
       <section className="most-popular">
         <div className="container comman-spacing-top-bottom">
-          <div className="d-flex align-items-center justify-content-between mb-5">
+          <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="heading">Most Popular</h2>
           </div>
           <div className="row g-4 ">
@@ -271,7 +244,7 @@ function Home() {
       </section>
       <section className="newly-added">
         <div className="container comman-spacing-top-bottom">
-          <div className="d-flex align-items-center justify-content-between mb-5">
+          <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="heading">Newly Added</h2>
           </div>
           <div className="row g-4 ">

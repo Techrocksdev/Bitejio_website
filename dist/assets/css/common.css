@@ -184,10 +184,12 @@ body {
 }
 .slide-btn.prevv {
   left: -32px;
+  z-index: 999;
 }
 
 .slide-btn.nextt {
   right: -32px;
+  z-index: 999;
 }
 
 .heading {

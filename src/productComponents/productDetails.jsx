@@ -337,14 +337,20 @@ function ProductDetails() {
                       <h2 className="heading m-0">{details?.name_en}</h2>
                       <div className="d-flex gap-2 align-items-center">
                         <img src="../assets/image/icons/veg-tag.svg" alt="" />
-                        <p className="text m-0">460 Calorie</p>
+                        {details?.calories ? (
+                          <p className="text m-0">
+                            {details?.calories} Calories
+                          </p>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                     <p className="text mt-1 fs-4 fw-semibold m-0">
                       {details?.userId?.shopName}
                     </p>
                     <p className="text mt-1 fw-medium ">
-                      D 102, B block, Connaught Place, New Delhi{" "}
+                      {details?.userId?.address}
                     </p>
                     <div className="d-flex gap-2 align-items-center ">
                       <img src="../assets/image/icons/Star.svg" alt="" />

@@ -1048,13 +1048,15 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .slide.pre {
   position: absolute;
-  top: -80px;
+  top: -60px;
   right: 75px;
+  z-index: 999;
 }
 .slide.nex {
   position: absolute;
-  top: -80px;
+  top: -60px;
   right: 20px;
+  z-index: 999;
 }
 .slick-disabled {
   opacity: 0.5 !important;

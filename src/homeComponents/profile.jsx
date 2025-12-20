@@ -202,8 +202,32 @@ function Profile() {
                                 }`}
                                 {...register("dob", {
                                   required: false,
+                                  validate: {
+                                    minAge: (value) => {
+                                      if (!value) return true;
+
+                                      const birthDate = new Date(value);
+                                      const today = new Date();
+                                      const minDate = new Date();
+                                      minDate.setFullYear(
+                                        today.getFullYear() - 7
+                                      );
+
+                                      return (
+                                        birthDate <= minDate ||
+                                        "User must be at least 7 years old"
+                                      );
+                                    },
+                                  },
                                 })}
                                 max={new Date().toISOString().split("T")[0]}
+                                min={(() => {
+                                  const minDate = new Date();
+                                  minDate.setFullYear(
+                                    minDate.getFullYear() - 100
+                                  );
+                                  return minDate.toISOString().split("T")[0];
+                                })()}
                               />
                               {errors.dob && (
                                 <p className="form-error">

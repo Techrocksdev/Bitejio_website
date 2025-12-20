@@ -109,7 +109,7 @@ function Cart() {
       cartId: item?._id,
       productId: item.productId._id,
       variantId: item.variantId._id,
-      merchantId: item.userId,
+      merchantId: item.productId.userId._id,
       quantity: item.quantity,
       amount: item.variantId.price,
       paidAmount: 0,
