@@ -156,7 +156,7 @@ function Cart() {
                       ? [...Array(5)].map((_, index) => (
                           <div
                             key={index}
-                            className="cart-item d-flex align-items-center justify-content-between mb-3"
+                            className="cart-item d-flex align-items-center justify-content-between"
                           >
                             <div className="col-12 col-md-7 col-lg-6 d-flex align-items-center gap-2">
                               <div className="cart-img">

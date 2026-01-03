@@ -1252,32 +1252,24 @@ button {
   font-size: 16px;
   font-weight: 600;
   margin: 0px 0 5px;
+  color: var(--black);
 }
 .noti_txt p {
   font-size: 15px;
-  color: #a2a1a8;
+  color: var(--text-light);
   line-height: 24px;
 }
 .timenoti {
-  color: #a2a1a8;
+  color: var(--text-light);
   font-size: 15px;
-}
-.notifications_page {
-  border: 1px solid #ececee;
-  border-radius: 10px;
-  padding: 5px 28px;
 }
 
 .notification_row {
-  padding: 8px 0;
-  border-bottom: 1px solid #ececee;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-light);
   margin: 12px 0;
-  cursor: pointer;
 }
 .notification_row.unread {
-  background-color: #2b7de90a;
-  box-shadow: inset 0 1px 12px #0000001f;
-}
-.notification_row:last-child {
-  border: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
 }

@@ -112,22 +112,46 @@ function OrderPlaced() {
                     <div className="d-flex gap-3 align-items-center delivery-partner">
                       <div className="user">
                         <img
-                          src="../../assets/image/users/user.png"
+                          src="../../assets/image/icons/delivery-man.png"
                           className="w-100 h-100"
                           alt=""
                         />
                       </div>
                       <div>
-                        <h2>Rajesh Kumar</h2>
-                        <p>Delivery Partner</p>
+                        <h2>
+                          {details?.products[0]?.deliveryBoyId?.firstName ? (
+                            <>
+                              {details?.products[0]?.deliveryBoyId?.firstName}{" "}
+                              {details?.products[0]?.deliveryBoyId?.lastName}
+                            </>
+                          ) : (
+                            <div style={{ lineHeight: "24px" }}>
+                              Your delivery partner will be assigned soon!{" "}
+                              <br /> Keep Checking!
+                            </div>
+                          )}
+                        </h2>
+                        {details?.products[0]?.deliveryBoyId?.firstName ? (
+                          <p>Delivery Partner</p>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
-                    <div className="icon">
-                      <img
-                        src="../../assets/image/icons/phone-white.svg"
-                        alt=""
-                      />
-                    </div>
+                    {details?.products[0]?.deliveryBoyId?.countryCode ? (
+                      <div className="icon">
+                        <a
+                          href={`tel:${details?.products[0]?.deliveryBoyId?.countryCode}${details?.products[0]?.deliveryBoyId?.phoneNumber}`}
+                        >
+                          <img
+                            src="../../assets/image/icons/phone-white.svg"
+                            alt="Call Delivery Boy"
+                          />
+                        </a>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
@@ -139,7 +163,7 @@ function OrderPlaced() {
                   {details?.products?.map((item) => (
                     <div
                       key={item.productId._id}
-                      className="cart-item d-flex align-items-center justify-content-between mb-3"
+                      className="cart-item d-flex align-items-center justify-content-between"
                     >
                       <div className="d-flex align-items-center gap-2">
                         <div className="cart-img">
