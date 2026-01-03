@@ -20,6 +20,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useUserAuth } from "../commonComponents/authContext";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 function ProductDetails() {
   let { id } = useParams();
@@ -480,7 +482,12 @@ function ProductDetails() {
                   id="overview"
                   role="tabpanel"
                 >
-                  <p className="text text-start">{details?.description_en}</p>
+                  <ReactQuill
+                    value={details?.description_en || ""}
+                    readOnly={true}
+                    theme="bubble"
+                    modules={{ toolbar: false }}
+                  />
                 </div>
                 {/* Review Tab */}
                 <div className="tab-pane fade" id="review" role="tabpanel">

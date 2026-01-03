@@ -10,9 +10,12 @@ import "slick-carousel/slick/slick-theme.css";
 import Header from "../homeComponents/header";
 import Footer from "../homeComponents/footer";
 import ProductCard from "./productCard";
+import FixedCartStrip from "../commonComponents/strip";
+import { useUserAuth } from "../commonComponents/authContext";
 
 function Products() {
   const [subCat, setSubCat] = useState("");
+  const { profile } = useUserAuth();
   let { id } = useParams();
   const { data: response, isLoading } = useQuery({
     queryKey: ["subCategoryList", id],
@@ -234,6 +237,7 @@ function Products() {
         </div>
       </section>
       <Footer />
+      <FixedCartStrip cartCount={profile?.cartCount} />
     </>
   );
 }

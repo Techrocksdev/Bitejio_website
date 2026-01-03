@@ -292,6 +292,19 @@ export async function getOrders(formData) {
     showGlobalAlert(error.message, "error");
   }
 }
+export async function getNotifications(formData) {
+  try {
+    const { data } = await webHttpService.post(
+      `${import.meta.env.VITE_APIENDPOINT}/notification/getNotifications`,
+      formData
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    showGlobalAlert(error.message, "error");
+  }
+}
 export async function getOrderDetails(id) {
   try {
     const { data } = await webHttpService.get(

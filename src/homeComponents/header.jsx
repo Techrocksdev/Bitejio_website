@@ -75,6 +75,18 @@ function Header() {
 
   const recentLocation = response?.results?.history;
 
+  useEffect(() => {
+    if (isDropdownVisible) {
+      document.body.style.overflowX = "reset";
+    } else {
+      document.body.style.overflowX = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflowX = "";
+    };
+  }, [isDropdownVisible]);
+
   const getCurrentLocation = () => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
@@ -524,6 +536,21 @@ function Header() {
                         </li>
                       </ul>
                     </div>
+                    <Link
+                      to="/notifications"
+                      className={`noti-bell ${
+                        profile?.notificationCount === 0 ? "no-ring" : ""
+                      }`}
+                    >
+                      <i class="fas fa-bell"></i>
+                      {profile?.notificationCount ? (
+                        <span className="noti-count">
+                          {profile?.notificationCount}
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </Link>
                     {profile?.cartCount ? (
                       <Link to="/cart" className="addToCart btn-comman">
                         <div className="d-flex gap-2">

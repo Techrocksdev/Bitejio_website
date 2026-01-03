@@ -11,6 +11,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BannerSlider from "./homeSlider";
+import SubCategory from "./subCategory";
 
 function Home() {
   const {
@@ -190,6 +191,7 @@ function Home() {
       <BannerSlider />
       <div className="mt-5"></div>
       <Category />
+      <SubCategory />
       <section className="most-popular">
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center justify-content-between mb-4">
