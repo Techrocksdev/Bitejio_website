@@ -204,7 +204,7 @@ function Cart() {
                                   {item.productId.name_en}
                                 </h6>
                                 <small className="text-muted">
-                                  {item.productId.userId.shopname}
+                                  {item.productId.userId.shopName}
                                 </small>
                                 <p className="fw-bold mb-0 mt-2">
                                   ₹{item?.variantId?.price}
