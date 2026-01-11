@@ -112,7 +112,7 @@ function SubCategory() {
                   <div className="row justify-content-center g-5">
                     {group.map((category) => (
                       <div key={category._id} className="col-2">
-                        <Link to={`/products/${category?._id}`}>
+                        <Link to={`/products/${category?.parentCategoryId}`}>
                           <div className="category-img m-auto">
                             <img
                               src={category.image}

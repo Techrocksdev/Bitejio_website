@@ -12,6 +12,10 @@ import ScrollToTop from "./commonComponents/scrollToTop";
 import ProtectedRoute from "./commonComponents/protectedRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const Privacy = lazy(() => import("./homeComponents/privacy"));
+const About = lazy(() => import("./homeComponents/about"));
+const Term = lazy(() => import("./homeComponents/term"));
 const Notification = lazy(() => import("./homeComponents/notification"));
 const OrderDetail = lazy(() => import("./homeComponents/orderDetail"));
 const Search = lazy(() => import("./homeComponents/search"));
@@ -104,6 +108,9 @@ function App() {
               <Route path="/products/:id" element={<Products />} />
               <Route path="/product-details/:id" element={<ProductDetails />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/privacy-policy" element={<Privacy />} />
+              <Route path="/about-us" element={<About />} />
+              <Route path="/term-&-conditions" element={<Term />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/cart" element={<Cart />} />

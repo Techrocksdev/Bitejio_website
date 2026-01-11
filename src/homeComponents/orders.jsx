@@ -147,7 +147,7 @@ function Orders() {
                             </h2>
                             {results?.map((item) => (
                               <div
-                                key={item._id}
+                                key={item?._id}
                                 className="mt-4 border rounded-3 px-1 py-2 px-md-3 py-md-3"
                               >
                                 <div className="d-flex align-items-center justify-content-between flex-wrap">
@@ -159,7 +159,7 @@ function Orders() {
                                       <p className="fs-6 fw-normal text-main m-0">
                                         Estimated Delivery:{" "}
                                         <span className="fw-semibold text-center">
-                                          1 Hours
+                                          30 Minutes
                                         </span>
                                       </p>
                                     </div>
@@ -177,7 +177,7 @@ function Orders() {
                                   </div>
                                   <div className="d-flex justify-content-end gap-2 align-items-center">
                                     <Link
-                                      to={`/order-details/${item._id}`}
+                                      to={`/order-details/${item?._id}`}
                                       className="text-main fs-6 fw-semibold d-flex align-items-center gap-2"
                                     >
                                       View Order Details
@@ -193,7 +193,7 @@ function Orders() {
                                     {item?.products?.slice(0, 2)?.map((i) => (
                                       <div
                                         className="col-md-6"
-                                        key={i.productId._id}
+                                        key={i?.productId?._id}
                                       >
                                         <div className="cart-item d-flex align-items-center justify-content-between mb-3">
                                           <div className="d-flex align-items-center gap-2">
@@ -231,7 +231,7 @@ function Orders() {
                               </h2>
                               {results2?.map((item) => (
                                 <div
-                                  key={item._id}
+                                  key={item?._id}
                                   className="mt-4 border rounded-3 px-1 py-2 px-md-3 py-md-3"
                                 >
                                   <div className="d-flex align-items-center justify-content-between flex-wrap">
@@ -260,7 +260,7 @@ function Orders() {
                                     </div>
                                     <div className="d-flex justify-content-end gap-2 align-items-center">
                                       <Link
-                                        to={`/order-details/${item._id}`}
+                                        to={`/order-details/${item?._id}`}
                                         className="text-main fs-6 fw-semibold d-flex align-items-center gap-2"
                                       >
                                         View Order Details
@@ -276,7 +276,7 @@ function Orders() {
                                       {item?.products?.slice(0, 2)?.map((i) => (
                                         <div
                                           className="col-md-6"
-                                          key={i.productId._id}
+                                          key={i.productId?._id}
                                         >
                                           <div className="cart-item d-flex align-items-center justify-content-between mb-3">
                                             <div className="d-flex align-items-center gap-2">

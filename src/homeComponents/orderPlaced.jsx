@@ -71,7 +71,7 @@ function OrderPlaced() {
                 <div className="d-flex align-items-center justify-content-between flex-wrap">
                   <h2 className="heading fs-6">Order Progress</h2>
                   <div className="text estimated-delivery-card">
-                    Estimated Delivery: <b className="text-dark">1 hour</b>
+                    Estimated Delivery: <b className="text-dark">30 Minutes</b>
                   </div>
                 </div>
                 <div className="mt-4">

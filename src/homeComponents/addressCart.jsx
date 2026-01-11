@@ -13,6 +13,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useUserAuth } from "../commonComponents/authContext";
 
 function AddressCart({ setAddDetail }) {
   const savedLocation = JSON.parse(sessionStorage.getItem("userLocation"));
@@ -21,6 +22,7 @@ function AddressCart({ setAddDetail }) {
   const [loader, setLoader] = useState(false);
   const [details, setDetails] = useState({});
   const [editDetails, setEditDetails] = useState({});
+  const { profile } = useUserAuth();
 
   const {
     register,
@@ -445,6 +447,82 @@ function AddressCart({ setAddDetail }) {
                 </div>
                 <div className="col-md-6">
                   <form onSubmit={handleSubmit(onSubmit)}>
+                    {!profile?.firstName ? (
+                      <>
+                        <div className="mb-3">
+                          <label htmlFor className="form-label">
+                            First Name
+                          </label>
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              errors.firstName ? "input-error" : ""
+                            }`}
+                            placeholder="Enter first name"
+                            {...register("firstName", {
+                              required: "First name is required",
+                              minLength: {
+                                value: 2,
+                                message:
+                                  "First name must be at least 2 characters",
+                              },
+                              maxLength: {
+                                value: 50,
+                                message:
+                                  "First name must be less than 50 characters",
+                              },
+                              pattern: {
+                                value: /^[A-Za-z\s]+$/,
+                                message:
+                                  "First name can only contain letters and spaces",
+                              },
+                            })}
+                          />
+                          {errors.firstName && (
+                            <p className="form-error">
+                              {errors.firstName.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor className="form-label">
+                            Last Name
+                          </label>
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              errors.lastName ? "input-error" : ""
+                            }`}
+                            placeholder="Enter last name"
+                            {...register("lastName", {
+                              required: "Last name is required",
+                              minLength: {
+                                value: 2,
+                                message:
+                                  "Last name must be at least 2 characters",
+                              },
+                              maxLength: {
+                                value: 50,
+                                message:
+                                  "Last name must be less than 50 characters",
+                              },
+                              pattern: {
+                                value: /^[A-Za-z\s]+$/,
+                                message:
+                                  "Last name can only contain letters and spaces",
+                              },
+                            })}
+                          />
+                          {errors.lastName && (
+                            <p className="form-error">
+                              {errors.lastName.message}
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      ""
+                    )}
                     <div className="mb-3">
                       <label className="form-label">Delivery details</label>
                       <input

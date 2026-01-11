@@ -18,7 +18,7 @@ import { useUserAuth } from "../commonComponents/authContext";
 
 function Cart() {
   const [addDetail, setAddDetail] = useState({});
-  const [selectedPayment, setSelectedPayment] = useState(20);
+  const [selectedPayment, setSelectedPayment] = useState(0);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
   const { refetch } = useUserAuth();
@@ -341,7 +341,7 @@ function Cart() {
                   <div className="col-md-5 col-lg-4">
                     <div className="rounded-3 bg-white overflow-hidden px-3 py-4">
                       <h2>Payment Option</h2>
-                      <div className="payment-option mt-4">
+                      {/* <div className="payment-option mt-4">
                         <label
                           className="d-flex gap-3 align-items-center"
                           style={{ cursor: "pointer" }}
@@ -373,7 +373,7 @@ function Cart() {
                           />
                           <div>Pay 100% Online</div>
                         </label>
-                      </div>
+                      </div> */}
 
                       <div className="payment-option mt-4">
                         <label

@@ -524,12 +524,8 @@ function Header() {
                           <Link
                             to=""
                             className="dropdown-item"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setLocationData(null);
-                              logout();
-                              navigate("/");
-                            }}
+                            data-bs-toggle="modal"
+                            data-bs-target="#logoutUser"
                           >
                             Log Out
                           </Link>
@@ -887,6 +883,57 @@ function Header() {
               )}
             </button>
           </form>
+        </div>
+      </div>
+      <div
+        className="modal fade logoutmodal"
+        id="logoutUser"
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="paymentmodal_main text-center">
+                <div className="payment_head mb-3 mt-1">
+                  <i
+                    className="fa fa-sign-out mb-2"
+                    style={{ fontSize: "30px" }}
+                    aria-hidden="true"
+                  ></i>
+                  <h2>Logout</h2>
+                  <p>Are you sure you want to log out?</p>
+                </div>
+                <div className="row justify-content-center mb-2">
+                  <div className="col-auto">
+                    <button
+                      className="comman-btn-main"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setLocationData(null);
+                        logout();
+                        document.getElementById("closeUser").click();
+                        navigate("/");
+                      }}
+                    >
+                      Yes
+                    </button>
+                  </div>
+                  <div className="col-auto">
+                    <Link
+                      className="comman-btn-main white"
+                      data-bs-dismiss="modal"
+                      to=""
+                      id="closeUser"
+                    >
+                      No
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

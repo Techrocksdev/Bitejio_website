@@ -199,6 +199,13 @@ body {
   line-height: 100%;
   letter-spacing: 0%;
 }
+.term h4 {
+  color: var(--black);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
 
 .w-fit {
   width: fit-content !important;
