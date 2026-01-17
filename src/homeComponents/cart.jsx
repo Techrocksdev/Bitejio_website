@@ -287,11 +287,11 @@ function Cart() {
                             <span>Subtotal</span>{" "}
                             <span>₹{totalPrice || 0}</span>
                           </p>
-                          <p className="d-flex justify-content-between mb-1">
-                            <span>Taxes &amp; Charges</span> <span>₹15</span>
-                          </p>
                           <p className="d-flex justify-content-between mb-3">
-                            <span>Delivery Charges</span> <span>₹20</span>
+                            <span>Delivery Charges</span> <span>₹30</span>
+                          </p>
+                          <p className="d-flex justify-content-between mb-1">
+                            <span>Platform Fees</span> <span>₹15</span>
                           </p>
                           <p className="d-flex justify-content-between mb-3">
                             <span>Discount</span>{" "}
@@ -299,7 +299,7 @@ function Cart() {
                           </p>
                           <h6 className="d-flex justify-content-between fw-bold">
                             <span>Total Payable</span>{" "}
-                            <span>₹{totalPrice + 15 + 20 - totalDiscount}</span>
+                            <span>₹{totalPrice + 15 + 30 - totalDiscount}</span>
                           </h6>
                         </div>
                       </div>

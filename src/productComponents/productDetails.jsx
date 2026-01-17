@@ -16,9 +16,10 @@ import { RotatingLines } from "react-loader-spinner";
 import ProductCard from "./productCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 import { useUserAuth } from "../commonComponents/authContext";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -104,69 +105,6 @@ function ProductDetails() {
   });
 
   const similarProducts = response2?.results?.products || [];
-  const NextArrow2 = ({ onClick, currentSlide, slideCount }) => {
-    const isDisabled =
-      currentSlide + sliderSettings2.slidesToShow >= slideCount;
-    return (
-      <button
-        className={`slide nex active ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="../../assets/image/icons/CaretRight.svg" alt="" />
-      </button>
-    );
-  };
-
-  const PrevArrow2 = ({ onClick, currentSlide }) => {
-    const isDisabled = currentSlide === 0;
-    return (
-      <button
-        className={`slide pre active ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="../../assets/image/icons/CaretLeft.svg" alt="" />
-      </button>
-    );
-  };
-
-  const sliderSettings2 = {
-    dots: false,
-    infinite: false,
-    speed: 600,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    arrows: true,
-    nextArrow: <NextArrow2 />,
-    prevArrow: <PrevArrow2 />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
 
   const updateQuantity = async (item, change, e) => {
     e.preventDefault();
@@ -537,12 +475,23 @@ function ProductDetails() {
       )}
       <section className="related-products">
         <div className="container comman-spacing-top-bottom">
-          <div className="d-flex align-items-center gap-2 flex-wrap mb-4">
+          <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="m-0 heading">You may also like</h2>
+            {!isLoading2 && similarProducts?.length > 0 && (
+              <div className="d-flex gap-3">
+                <button className="swiper-button-prev-popular slide  active">
+                  <img src="../../assets/image/icons/CaretLeft.svg" alt="" />
+                </button>
+                <button className="swiper-button-next-popular slide  active">
+                  <img src="../../assets/image/icons/CaretRight.svg" alt="" />
+                </button>
+              </div>
+            )}{" "}
           </div>
-          <div className="row g-4 ">
-            {isLoading2 || isLoading ? (
-              <>
+
+          {isLoading2 || isLoading ? (
+            <>
+              <div className="row g-4 ">
                 {[...Array(4)].map((_, index) => (
                   <div className="col-md-6 col-lg-4 col-xl-3" key={index}>
                     <a>
@@ -574,17 +523,48 @@ function ProductDetails() {
                     </a>
                   </div>
                 ))}
-              </>
-            ) : similarProducts?.length ? (
-              <Slider {...sliderSettings2}>
-                {similarProducts?.map((item) => (
+              </div>
+            </>
+          ) : similarProducts?.length ? (
+            <Swiper
+              modules={[Navigation]}
+              slidesPerView={4}
+              navigation={{
+                nextEl: ".swiper-button-next-popular",
+                prevEl: ".swiper-button-prev-popular",
+              }}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                },
+                480: {
+                  slidesPerView: 1,
+                  spaceBetween: 15,
+                },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+              }}
+            >
+              {similarProducts?.map((item) => (
+                <SwiperSlide key={item._id}>
                   <ProductCard item={item} refetch2={refetch2} home={true} />
-                ))}
-              </Slider>
-            ) : (
-              ""
-            )}
-          </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            ""
+          )}
         </div>
       </section>
       <Footer />

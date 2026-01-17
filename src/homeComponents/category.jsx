@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,6 +9,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Link } from "react-router-dom";
 
 function Category() {
+  const [itemsPerSlide, setItemsPerSlide] = useState(12);
   const { data: response, isLoading } = useQuery({
     queryKey: ["categoryList"],
     queryFn: async () => {
@@ -24,11 +25,35 @@ function Category() {
   });
 
   const categories = response?.results?.categories;
-  const groupedCategories = [];
-  for (let i = 0; i < categories?.length; i += 12) {
-    groupedCategories.push(categories?.slice(i, i + 12));
-  }
-  console.log(groupedCategories);
+  useEffect(() => {
+    const updateItemsPerSlide = () => {
+      const width = window.innerWidth;
+      if (width < 576) {
+        setItemsPerSlide(4); // 2x2 grid on mobile
+      } else if (width < 768) {
+        setItemsPerSlide(6); // 2x3 grid on small tablets
+      } else if (width < 992) {
+        setItemsPerSlide(8); // 2x4 grid on tablets
+      } else if (width < 1200) {
+        setItemsPerSlide(10); // 2x5 grid on small desktops
+      } else {
+        setItemsPerSlide(12); // 2x6 grid on large screens
+      }
+    };
+
+    updateItemsPerSlide();
+    window.addEventListener("resize", updateItemsPerSlide);
+    return () => window.removeEventListener("resize", updateItemsPerSlide);
+  }, []);
+
+  const groupedCategories = useMemo(() => {
+    if (!categories) return [];
+    const groups = [];
+    for (let i = 0; i < categories.length; i += itemsPerSlide) {
+      groups.push(categories.slice(i, i + itemsPerSlide));
+    }
+    return groups;
+  }, [categories, itemsPerSlide]);
 
   const NextArrow = ({ onClick, currentSlide, slideCount }) => {
     const isDisabled = currentSlide === slideCount - 1;
@@ -64,20 +89,7 @@ function Category() {
     arrows: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 1, slidesToScroll: 1 },
-      },
-      {
-        breakpoint: 768,
-        settings: { slidesToShow: 1, slidesToScroll: 1 },
-      },
-      {
-        breakpoint: 480,
-        settings: { slidesToShow: 1, slidesToScroll: 1 },
-      },
-    ],
+    adaptiveHeight: true,
   };
 
   return (
@@ -90,7 +102,10 @@ function Category() {
           {isLoading ? (
             <>
               {[...Array(12)].map((_, colIndex) => (
-                <div key={colIndex} className="col-2">
+                <div
+                  key={colIndex}
+                  className="col-6 col-sm-4 col-md-3 col-lg-2"
+                >
                   <Link to="">
                     <div
                       className="category-img m-auto wow animate__animated animate__zoomIn"
@@ -111,7 +126,10 @@ function Category() {
                 <div key={groupIndex}>
                   <div className="row justify-content-center g-5">
                     {group.map((category) => (
-                      <div key={category._id} className="col-2">
+                      <div
+                        key={category._id}
+                        className="col-6 col-sm-4 col-md-3 col-lg-2"
+                      >
                         <Link to={`/products/${category?._id}`}>
                           <div className="category-img m-auto">
                             <img

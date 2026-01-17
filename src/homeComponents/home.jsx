@@ -7,9 +7,10 @@ import { getProduct } from "../apiServices/home/homeHttpService";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ProductCard from "../productComponents/productCard";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 import BannerSlider from "./homeSlider";
 import SubCategory from "./subCategory";
 
@@ -58,133 +59,6 @@ function Home() {
 
   const newProducts = response2?.results?.products || [];
 
-  const NextArrow = ({ onClick, currentSlide, slideCount }) => {
-    const isDisabled = currentSlide + sliderSettings.slidesToShow >= slideCount;
-    return (
-      <button
-        className={`slide nex active ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="assets/image/icons/CaretRight.svg" alt="" />
-      </button>
-    );
-  };
-
-  const PrevArrow = ({ onClick, currentSlide }) => {
-    const isDisabled = currentSlide === 0;
-    return (
-      <button
-        className={`slide pre active ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="assets/image/icons/CaretLeft.svg" alt="" />
-      </button>
-    );
-  };
-
-  const sliderSettings = {
-    dots: false,
-    infinite: false,
-    speed: 600,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    arrows: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
-  const NextArrow2 = ({ onClick, currentSlide, slideCount }) => {
-    const isDisabled =
-      currentSlide + sliderSettings2.slidesToShow >= slideCount;
-    return (
-      <button
-        className={`slide nex active ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="assets/image/icons/CaretRight.svg" alt="" />
-      </button>
-    );
-  };
-
-  const PrevArrow2 = ({ onClick, currentSlide }) => {
-    const isDisabled = currentSlide === 0;
-    return (
-      <button
-        className={`slide pre active ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="assets/image/icons/CaretLeft.svg" alt="" />
-      </button>
-    );
-  };
-
-  const sliderSettings2 = {
-    dots: false,
-    infinite: false,
-    speed: 600,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    arrows: true,
-    nextArrow: <NextArrow2 />,
-    prevArrow: <PrevArrow2 />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
   return (
     <>
       <Header />
@@ -196,104 +70,178 @@ function Home() {
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="heading">Most Popular</h2>
+            {!isLoading && popularProducts?.length > 0 && (
+              <div className="d-flex gap-3">
+                <button className="swiper-button-prev-popular slide  active">
+                  <img src="assets/image/icons/CaretLeft.svg" alt="" />
+                </button>
+                <button className="swiper-button-next-popular slide  active">
+                  <img src="assets/image/icons/CaretRight.svg" alt="" />
+                </button>
+              </div>
+            )}
           </div>
-          <div className="row g-4 ">
-            {isLoading ? (
-              <>
-                {[...Array(4)].map((_, index) => (
-                  <div className="col-md-6 col-lg-4 col-xl-3" key={index}>
-                    <a>
-                      <div
-                        className="custom-card wow animate__animated animate__fadeInUp"
-                        data-wow-delay="0.2s"
-                      >
-                        <div className="custom-card-header">
+          {isLoading ? (
+            <div className="row g-4">
+              {[...Array(4)].map((_, index) => (
+                <div className="col-md-6 col-lg-4 col-xl-3" key={index}>
+                  <a>
+                    <div
+                      className="custom-card wow animate__animated animate__fadeInUp"
+                      data-wow-delay="0.2s"
+                    >
+                      <div className="custom-card-header">
+                        <Skeleton />
+                      </div>
+                      <div className="custom-card-body">
+                        <h2>
                           <Skeleton />
+                        </h2>
+                        <div>
+                          <Skeleton style={{ width: "70%" }} />
                         </div>
-                        <div className="custom-card-body">
-                          <h2>
-                            <Skeleton />
-                          </h2>
-                          <div>
-                            <Skeleton style={{ width: "70%" }} />
-                          </div>
-                          <div className="mt-4">
-                            <div className="d-flex justify-content-between">
-                              <div className="d-flex align-items-center gap-2 w-100 ">
-                                <p className="text w-100">
-                                  <Skeleton style={{ width: "100%" }} />
-                                </p>
-                              </div>
+                        <div className="mt-4">
+                          <div className="d-flex justify-content-between">
+                            <div className="d-flex align-items-center gap-2 w-100 ">
+                              <p className="text w-100">
+                                <Skeleton style={{ width: "100%" }} />
+                              </p>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </a>
-                  </div>
-                ))}
-              </>
-            ) : popularProducts?.length ? (
-              <Slider {...sliderSettings}>
-                {popularProducts?.map((item) => (
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : popularProducts?.length ? (
+            <Swiper
+              modules={[Navigation]}
+              slidesPerView={4}
+              navigation={{
+                nextEl: ".swiper-button-next-popular",
+                prevEl: ".swiper-button-prev-popular",
+              }}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                },
+                480: {
+                  slidesPerView: 1,
+                  spaceBetween: 15,
+                },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+              }}
+            >
+              {popularProducts?.map((item) => (
+                <SwiperSlide key={item._id}>
                   <ProductCard item={item} refetch2={refetch1} home={true} />
-                ))}
-              </Slider>
-            ) : (
-              ""
-            )}
-          </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : null}
         </div>
       </section>
       <section className="newly-added">
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="heading">Newly Added</h2>
+            {!isLoading2 && newProducts?.length > 0 && (
+              <div className="d-flex gap-3">
+                <button className="swiper-button-prev-new slide  active">
+                  <img src="assets/image/icons/CaretLeft.svg" alt="" />
+                </button>
+                <button className="swiper-button-next-new slide  active">
+                  <img src="assets/image/icons/CaretRight.svg" alt="" />
+                </button>
+              </div>
+            )}
           </div>
-          <div className="row g-4 ">
-            {isLoading2 ? (
-              <>
-                {[...Array(4)].map((_, index) => (
-                  <div className="col-md-6 col-lg-4 col-xl-3" key={index}>
-                    <a>
-                      <div
-                        className="custom-card wow animate__animated animate__fadeInUp"
-                        data-wow-delay="0.2s"
-                      >
-                        <div className="custom-card-header">
+          {isLoading2 ? (
+            <div className="row g-4">
+              {[...Array(4)].map((_, index) => (
+                <div className="col-md-6 col-lg-4 col-xl-3" key={index}>
+                  <a>
+                    <div
+                      className="custom-card wow animate__animated animate__fadeInUp"
+                      data-wow-delay="0.2s"
+                    >
+                      <div className="custom-card-header">
+                        <Skeleton />
+                      </div>
+                      <div className="custom-card-body">
+                        <h2>
                           <Skeleton />
+                        </h2>
+                        <div>
+                          <Skeleton style={{ width: "70%" }} />
                         </div>
-                        <div className="custom-card-body">
-                          <h2>
-                            <Skeleton />
-                          </h2>
-                          <div>
-                            <Skeleton style={{ width: "70%" }} />
-                          </div>
-                          <div className="mt-4">
-                            <div className="d-flex justify-content-between">
-                              <div className="d-flex align-items-center gap-2 w-100 ">
-                                <p className="text w-100">
-                                  <Skeleton style={{ width: "100%" }} />
-                                </p>
-                              </div>
+                        <div className="mt-4">
+                          <div className="d-flex justify-content-between">
+                            <div className="d-flex align-items-center gap-2 w-100 ">
+                              <p className="text w-100">
+                                <Skeleton style={{ width: "100%" }} />
+                              </p>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </a>
-                  </div>
-                ))}
-              </>
-            ) : newProducts?.length ? (
-              <Slider {...sliderSettings2}>
-                {newProducts?.map((item) => (
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : newProducts?.length ? (
+            <Swiper
+              modules={[Navigation]}
+              slidesPerView={4}
+              navigation={{
+                nextEl: ".swiper-button-next-new",
+                prevEl: ".swiper-button-prev-new",
+              }}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                },
+                480: {
+                  slidesPerView: 1,
+                  spaceBetween: 15,
+                },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+              }}
+            >
+              {newProducts?.map((item) => (
+                <SwiperSlide key={item._id}>
                   <ProductCard item={item} refetch2={refetch2} home={true} />
-                ))}
-              </Slider>
-            ) : (
-              ""
-            )}
-          </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : null}
         </div>
       </section>
       <section
@@ -368,7 +316,7 @@ function Home() {
               className="mx-auto mb-3"
             />
             <h5 className="mb-3 modal-heading">
-              Let’s find out if we can bring the food to you{" "}
+              Let's find out if we can bring the food to you{" "}
             </h5>
             <input
               type="text"
@@ -397,7 +345,7 @@ function Home() {
               className="mx-auto mb-3"
             />
             <h5 className="mb-3 modal-heading">
-              Not in your area yet, but we’ll be there soon 🚀
+              Not in your area yet, but we'll be there soon 🚀
             </h5>
             <input
               type="text"

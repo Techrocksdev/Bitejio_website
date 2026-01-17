@@ -1,11 +1,47 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const FixedCartStrip = ({ cartCount }) => {
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const prevCartCount = useRef(null);
+  useEffect(() => {
+    if (cartCount > 0) {
+      document.body.style.paddingBottom = "50px";
+    } else {
+      document.body.style.paddingBottom = "0";
+    }
+
+    return () => {
+      document.body.style.paddingBottom = "0";
+    };
+  }, [cartCount]);
+
+  useEffect(() => {
+    if (prevCartCount.current === null) {
+      prevCartCount.current = cartCount;
+      return;
+    }
+
+    if (cartCount > prevCartCount.current) {
+      setShouldAnimate(true);
+
+      const timer = setTimeout(() => {
+        setShouldAnimate(false);
+      }, 600);
+
+      return () => clearTimeout(timer);
+    }
+
+    prevCartCount.current = cartCount;
+  }, [cartCount]);
+
   if (!cartCount || cartCount === 0) return null;
 
   return (
-    <Link to="/cart" className="fixed-bottom cart-strip">
+    <Link
+      to="/cart"
+      className={`cart-strip fixed-bottom ${shouldAnimate ? "animate-strip" : ""}`}
+    >
       <div className="container">
         <div className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2">
