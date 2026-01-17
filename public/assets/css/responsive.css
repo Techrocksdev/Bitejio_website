@@ -1,275 +1,276 @@
 /* Extra large desktops (1440px and up) */
 @media (min-width: 1700px) {
-    .container {
-        max-width: 1240px;
-        /* as per your requirement */
-    }
+  .container {
+    max-width: 1240px;
+    /* as per your requirement */
+  }
 }
 
 /* Large desktops (1200px to 1439px) */
 @media (min-width: 1200px) and (max-width: 1439px) {
-    .container {
-        max-width: 1240px;
-    }
+  .container {
+    max-width: 1240px;
+  }
 
-    .search-box {
-        margin: 0 10px;
-    }
+  .search-box {
+    margin: 0 10px;
+  }
 
-    .search-box input {
-        font-size: 13px;
-        padding: 7px 10px;
-    }
+  .search-box input {
+    font-size: 13px;
+    padding: 7px 10px;
+  }
 
-    .location {
-        font-size: 13px;
-    }
+  .location {
+    font-size: 13px;
+  }
 }
 
 /* Medium desktops / laptops (992px to 1199px) */
 @media (min-width: 992px) and (max-width: 1199px) {
-    .container {
-        max-width: 960px;
-    }
+  .container {
+    max-width: 960px;
+  }
 
-    .header-wrapper {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
+  .header-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
 
-    .search-box {
-        max-width: 100%;
-        margin: 0;
-    }
+  .search-box {
+    max-width: 100%;
+    margin: 0;
+  }
 
-    .auth {
-        justify-content: flex-end;
-    }
+  .auth {
+    justify-content: flex-end;
+  }
 }
 
 /* Tablets (768px to 991px) */
 @media (min-width: 768px) and (max-width: 991px) {
-    .container {
-        max-width: 100%;
-    }
+  .container {
+    max-width: 100%;
+  }
 
-    .logo img {
-        height: 36px;
-    }
+  .logo img {
+    height: 36px;
+  }
 
-    .location {
-        font-size: 12px;
-        padding: 4px 8px;
-    }
+  .location {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
 
-    .search-box input {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
+  .search-box input {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
 
-    .auth a {
-        font-size: 12px;
-    }
+  .auth a {
+    font-size: 12px;
+  }
 
-    .auth .signup {
-        padding: 2px 11px;
-    }
+  .auth .signup {
+    padding: 2px 11px;
+  }
 
-    .header .header-wrapper .location button.btn.btn-light {
-        font-size: 11px;
-    }
+  .header .header-wrapper .location button.btn.btn-light {
+    font-size: 11px;
+  }
 
-    .banner-wrapper {
-        height: 346px;
-    }
+  .banner-wrapper {
+    height: 346px;
+  }
 
-    .banner-wrapper .content {
-        top: 46%;
-        padding: 0 4rem;
-    }
+  .banner-wrapper .content {
+    top: 46%;
+    padding: 0 4rem;
+  }
 }
 
 /* Large phones (576px to 767px) */
-@media(max-width: 767px) {
-    .container {
-        max-width: 540px;
-    }
+@media (max-width: 767px) {
+  .container {
+    max-width: 540px;
+  }
 
-    .header-wrapper {
-        padding: 8px 12px;
-    }
+  .header-wrapper {
+    padding: 8px 12px;
+  }
 
-    .logo img {
-        height: 32px;
-    }
+  .logo img {
+    height: 32px;
+  }
 
-    .location {
-        font-size: 11px;
-    }
+  .location {
+    font-size: 11px;
+  }
 
-    .location select,
-    .search-box input {
-        font-size: 12px;
-    }
+  .location select,
+  .search-box input {
+    font-size: 12px;
+  }
 
-    /* .auth .signup {
+  /* .auth .signup {
         padding: 5px 10px;
         font-size: 12px;
     } */
 
-    .banner-2-wrapper {
-        height: 767px;
-    }
+  .banner-2-wrapper {
+    height: 767px;
+  }
 
-    .banner-2-wrapper .content {
-        height: 767px;
-    }
+  .banner-2-wrapper .content {
+    height: 767px;
+  }
 
-    .banner-wrapper {
-        height: 250px;
-    }
+  .banner-wrapper {
+    height: 250px;
+  }
 
-    .banner-wrapper .content {
-        padding: 0 2.5rem;
-    }
+  .banner-wrapper .content {
+    padding: 0 2.5rem;
+  }
 
-    .banner-wrapper .content h1 {
-        font-size: 18px;
-    }
+  .banner-wrapper .content h1 {
+    font-size: 18px;
+  }
 
-    .banner-wrapper .content h1 span {
-        font-size: 20px;
-    }
+  .banner-wrapper .content h1 span {
+    font-size: 20px;
+  }
 
-    .banner-wrapper .content p {
-        font-size: 16px;
-    }
+  .banner-wrapper .content p {
+    font-size: 16px;
+  }
 
-    .comman-btn-main,
-    .comman-btn-white {
-        height: 30px;
-        line-height: 30px;
-        font-size: 12px;
-        padding: 0 12px;
-        width: fit-content;
-    }
+  .comman-btn-main,
+  .comman-btn-white,
+  .btn-light {
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    padding: 0 12px;
+    width: fit-content;
+  }
 
-    .slide-btn {
-        width: 35px;
-        height: 35px;
-    }
+  .slide-btn {
+    width: 35px;
+    height: 35px;
+  }
 
-    .slide-btn.prev {
-        left: -9px;
-    }
+  .slide-btn.prev {
+    left: -9px;
+  }
 
-    .slide-btn.next {
-        right: -9px;
-    }
+  .slide-btn.next {
+    right: -9px;
+  }
 
-    .category-img {
-        width: 130px;
-        height: 130px;
-    }
+  .category-img {
+    width: 130px;
+    height: 130px;
+  }
 
-    .banner-2-wrapper .content p {
-        width: 100%;
-    }
+  .banner-2-wrapper .content p {
+    width: 100%;
+  }
 
-    .location {
-        padding: 0;
-    }
+  .location {
+    padding: 0;
+  }
 
-    .header .header-wrapper .auth {
-        gap: 5px;
-        display: flex;
-    }
+  .header .header-wrapper .auth {
+    gap: 5px;
+    display: flex;
+  }
 
-    .header .header-wrapper .auth a.login {
-        width: fit-content;
-        display: inline-block;
-        margin-right: 10px;
-    }
+  .header .header-wrapper .auth a.login {
+    width: fit-content;
+    display: inline-block;
+    margin-right: 10px;
+  }
 
-    .auth .signup {
-        width: 40%;
-        line-height: 34px;
-        text-align: center;
-        display: inline-block;
-    }
+  .auth .signup {
+    width: 40%;
+    line-height: 34px;
+    text-align: center;
+    display: inline-block;
+  }
 
-    .cart-item {
-        flex-wrap: wrap;
-        gap: 18px;
-    }
+  .cart-item {
+    flex-wrap: wrap;
+    gap: 18px;
+  }
 
-    .product-details .slide-btn {
-        top: 36%;
-    }
+  .product-details .slide-btn {
+    top: 36%;
+  }
 
-    .product-details .slide-btn.next {
-        right: 20px;
-    }
+  .product-details .slide-btn.next {
+    right: 20px;
+  }
 
-    .category-items-tabs {
-        padding: 40px 40px;
-    }
+  .category-items-tabs {
+    padding: 40px 40px;
+  }
 
-    .add-btn {
-        padding: 5px 8px;
-    }
+  .add-btn {
+    padding: 5px 8px;
+  }
 
-    .btn-comman {
-        height: 35px;
-        font-size: 12px;
-        line-height: 30px;
-        padding: 0 10px;
-    }
+  .btn-comman {
+    height: 35px;
+    font-size: 12px;
+    line-height: 30px;
+    padding: 0 10px;
+  }
 
-    .btn-comman img {
-        width: 16px;
-    }
+  .btn-comman img {
+    width: 16px;
+  }
 
-    .product-details-main-img,
-    .product-details-main-img-wrapper {
-        height: 250px;
-    }
+  .product-details-main-img,
+  .product-details-main-img-wrapper {
+    height: 250px;
+  }
 
-    .product-details-img {
-        height: 80px;
-    }
+  .product-details-img {
+    height: 80px;
+  }
 
-    .product-details-img.last::after {
-        line-height: 80px;
-    }
+  .product-details-img.last::after {
+    line-height: 80px;
+  }
 }
 
 /* Extra small devices (below 576px) */
 @media (max-width: 575px) {
-    .container {
-        max-width: 100%;
-    }
+  .container {
+    max-width: 100%;
+  }
 
-    .header-wrapper {
-        flex-direction: column;
-        gap: 6px;
-    }
+  .header-wrapper {
+    flex-direction: column;
+    gap: 6px;
+  }
 
-    .logo img {
-        height: 28px;
-    }
+  .logo img {
+    height: 28px;
+  }
 
-    .search-box input {
-        font-size: 11px;
-        padding: 5px 8px;
-    }
+  .search-box input {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
 
-    /* .auth {
+  /* .auth {
         flex-direction: column;
         gap: 6px;
     } */
-    .modal-width {
-        max-width: auto;
-    }
+  .modal-width {
+    max-width: auto;
+  }
 }

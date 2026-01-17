@@ -186,10 +186,7 @@ function ProductCard({ item, refetch2, home }) {
 
   return (
     <>
-      <div
-        key={item?._id}
-        className={home ? "me-4" : "col-md-4 col-lg-4 col-xl-4"}
-      >
+      <div key={item?._id} className={home ? "" : "col-md-4 col-lg-4 col-xl-4"}>
         <div>
           <div
             className="custom-card wow animate__animated animate__fadeInUp"

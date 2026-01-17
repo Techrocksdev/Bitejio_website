@@ -43,6 +43,7 @@ function Header() {
   const { refetch, token, logout, login, profile, searchPro, search } =
     useUserAuth();
   const savedLocation = sessionStorage.getItem("userLocation");
+  const [widthBelowLG, setWidthBelowLG] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef(null);
   const location = useLocation();
@@ -52,6 +53,17 @@ function Header() {
       inputRef.current?.focus();
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    const checkWidth = () => {
+      setWidthBelowLG(window.innerWidth < 992);
+    };
+
+    checkWidth();
+    window.addEventListener("resize", checkWidth);
+
+    return () => window.removeEventListener("resize", checkWidth);
+  }, []);
 
   useEffect(() => {
     if (savedLocation) {
@@ -343,8 +355,8 @@ function Header() {
                       {locationData?.formattedShort
                         ? locationData?.formattedShort
                         : isloading
-                        ? "Fetching your location..."
-                        : "Enter your delivery location"}
+                          ? "Fetching your location..."
+                          : "Enter your delivery location"}
                     </div>
                   </button>
                   <ul
@@ -520,6 +532,25 @@ function Header() {
                             My Profile
                           </Link>
                         </li>
+                        {widthBelowLG ? (
+                          <>
+                            <li>
+                              <Link className="dropdown-item" to="/my-orders">
+                                My Orders
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                className="dropdown-item"
+                                to="/my-addresses"
+                              >
+                                Addresses
+                              </Link>
+                            </li>
+                          </>
+                        ) : (
+                          ""
+                        )}
                         <li>
                           <Link
                             to=""
@@ -554,9 +585,7 @@ function Header() {
                             src="../../assets/image/icons/ShoppingCart.svg"
                             alt=""
                           />
-                          <span className="d-none d-md-block">
-                            {profile?.cartCount} items
-                          </span>
+                          <span>{profile?.cartCount} items</span>
                         </div>
                       </Link>
                     ) : (
@@ -700,7 +729,7 @@ function Header() {
             aria-label="Close"
             id="closeOtpModal"
             onClick={() => {
-              reset(), reset1();
+              (reset(), reset1());
             }}
           ></button>
 

@@ -63,7 +63,6 @@ function Home() {
     <>
       <Header />
       <BannerSlider />
-      <div className="mt-5"></div>
       <Category />
       <SubCategory />
       <section className="most-popular">
