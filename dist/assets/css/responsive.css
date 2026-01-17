@@ -92,6 +92,9 @@
 
 /* Large phones (576px to 767px) */
 @media (max-width: 767px) {
+  .more {
+    font-size: 14px !important;
+  }
   .container {
     max-width: 540px;
   }
@@ -101,7 +104,9 @@
   }
 
   .logo img {
-    height: 32px;
+    height: auto;
+    max-height: 35px;
+    width: auto;
   }
 
   .location {
@@ -156,19 +161,6 @@
     width: fit-content;
   }
 
-  .slide-btn {
-    width: 35px;
-    height: 35px;
-  }
-
-  .slide-btn.prev {
-    left: -9px;
-  }
-
-  .slide-btn.next {
-    right: -9px;
-  }
-
   .category-img {
     width: 130px;
     height: 130px;
@@ -205,16 +197,8 @@
     gap: 18px;
   }
 
-  .product-details .slide-btn {
-    top: 36%;
-  }
-
-  .product-details .slide-btn.next {
-    right: 20px;
-  }
-
   .category-items-tabs {
-    padding: 40px 40px;
+    padding: 10px 40px;
   }
 
   .add-btn {
@@ -224,7 +208,7 @@
   .btn-comman {
     height: 35px;
     font-size: 12px;
-    line-height: 30px;
+    line-height: 35px;
     padding: 0 10px;
   }
 
@@ -255,10 +239,6 @@
   .header-wrapper {
     flex-direction: column;
     gap: 6px;
-  }
-
-  .logo img {
-    height: 28px;
   }
 
   .search-box input {

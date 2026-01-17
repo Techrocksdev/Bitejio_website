@@ -69,7 +69,7 @@ function Orders() {
               </span>
             </h2>
             <div className="mt-4">
-              <div className="bg-white border shadow rounded-3 px-4 py-3">
+              <div className="bg-white border shadow rounded-3 px-2 px-md-4 py-3">
                 <div className="row">
                   <div className="col-md-3 vh-100 d-none d-lg-block">
                     <div className="my-link-wrapper">
@@ -97,7 +97,7 @@ function Orders() {
                       {isLoading ? (
                         Array.from({ length: 3 }).map((_, i) => (
                           <div className="mt-4" key={i}>
-                            <div className="mt-4 border rounded-3 px-1 py-2 px-md-3 py-md-3">
+                            <div className="mt-4 border rounded-3 px-2 py-2 px-md-3 py-md-3">
                               <div className="d-flex align-items-center justify-content-between flex-wrap">
                                 <div className="d-flex gap-3 align-items-center flex-wrap w-100">
                                   <h2 className="fs-6 fw-medium m-0 w-100">
@@ -148,7 +148,7 @@ function Orders() {
                             {results?.map((item) => (
                               <div
                                 key={item?._id}
-                                className="mt-4 border rounded-3 px-1 py-2 px-md-3 py-md-3"
+                                className="mt-4 border rounded-3 px-2 py-2 px-md-3 py-md-3"
                               >
                                 <div className="d-flex align-items-center justify-content-between flex-wrap">
                                   <div>
@@ -232,7 +232,7 @@ function Orders() {
                               {results2?.map((item) => (
                                 <div
                                   key={item?._id}
-                                  className="mt-4 border rounded-3 px-1 py-2 px-md-3 py-md-3"
+                                  className="mt-4 border rounded-3 px-2 py-2 px-md-3 py-md-3"
                                 >
                                   <div className="d-flex align-items-center justify-content-between flex-wrap">
                                     <div>

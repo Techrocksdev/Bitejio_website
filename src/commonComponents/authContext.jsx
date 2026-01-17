@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() =>
-    localStorage.getItem("token-bit-user")
+    localStorage.getItem("token-bit-user"),
   );
   const [search, setSearch] = useState("");
 

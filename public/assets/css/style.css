@@ -1303,3 +1303,12 @@ button {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.category-items-tabs .swiper-slide {
+  width: auto !important;
+  flex-shrink: 0;
+}
+
+.category-items-tabs-items {
+  display: inline-block;
+  white-space: nowrap;
+}

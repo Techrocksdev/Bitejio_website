@@ -7,6 +7,7 @@ import Header from "./header";
 import Footer from "./footer";
 
 function Notifications() {
+  const isMobile = window.innerWidth < 768;
   const { data: response, isLoading } = useQuery({
     queryKey: ["notificationsList"],
     queryFn: async () => {
@@ -22,8 +23,7 @@ function Notifications() {
   });
 
   const results = response?.results?.notifications || [];
-
-  function getTimeAgo(dateString) {
+  function getTimeAgo(dateString, isMobile = false) {
     const now = new Date();
     const past = new Date(dateString);
     const diff = now - past;
@@ -36,16 +36,27 @@ function Notifications() {
     const years = Math.floor(months / 12);
 
     if (seconds < 5) return "Just now";
-    if (years > 0) return years === 1 ? "1 year ago" : `${years} years ago`;
-    if (months > 0)
-      return months === 1 ? "1 month ago" : `${months} months ago`;
-    if (days > 0) return days === 1 ? "1 day ago" : `${days} days ago`;
-    if (hours > 0) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
-    if (minutes > 0)
-      return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
-    return seconds === 1 ? "1 second ago" : `${seconds} seconds ago`;
-  }
 
+    if (isMobile) {
+      // Short format for mobile
+      if (years > 0) return `${years}y`;
+      if (months > 0) return `${months}mo`;
+      if (days > 0) return `${days}d`;
+      if (hours > 0) return `${hours}h`;
+      if (minutes > 0) return `${minutes}m`;
+      return `${seconds}s`;
+    } else {
+      // Full format for desktop
+      if (years > 0) return years === 1 ? "1 year ago" : `${years} years ago`;
+      if (months > 0)
+        return months === 1 ? "1 month ago" : `${months} months ago`;
+      if (days > 0) return days === 1 ? "1 day ago" : `${days} days ago`;
+      if (hours > 0) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+      if (minutes > 0)
+        return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+      return seconds === 1 ? "1 second ago" : `${seconds} seconds ago`;
+    }
+  }
   return (
     <>
       <Header />
@@ -99,7 +110,7 @@ function Notifications() {
                     </div>
                     <div className="col-auto">
                       <div className="timenoti">
-                        {getTimeAgo(item.createdAt)}
+                        {getTimeAgo(item.createdAt, isMobile)}
                       </div>
                     </div>
                   </div>

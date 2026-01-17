@@ -4,7 +4,7 @@ import { useUserAuth } from "../commonComponents/authContext";
 import FixedCartStrip from "../commonComponents/strip";
 
 function Footer() {
-  const { profile } = useUserAuth();
+  const { profile, token } = useUserAuth();
   return (
     <>
       <footer className="footer">
@@ -106,7 +106,7 @@ function Footer() {
           <div className="footer-copy-right">© 2025 Bitezio Pvt ltd</div>
         </div>
       </footer>
-      <FixedCartStrip cartCount={profile?.cartCount} />
+      {token ? <FixedCartStrip cartCount={profile?.cartCount} /> : ""}
     </>
   );
 }

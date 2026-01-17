@@ -21,9 +21,20 @@ function OrderPlaced() {
     return sum + item.variantId.price * item.quantity;
   }, 0);
 
-  const totalDiscount = details?.products?.reduce((sum, item) => {
-    return sum + (item.variantId.discountPrice || 0) * item.quantity;
+  const discountPrice = details?.products?.reduce((sum, item) => {
+    return (
+      sum +
+      (item.variantId.discountPrice || item.variantId.price) * item.quantity
+    );
   }, 0);
+
+  const totalDiscount = details?.products?.reduce((sum, item) => {
+    const regularPrice = item.variantId.price * item.quantity;
+    const discountedPrice =
+      (item.variantId.discountPrice || item.variantId.price) * item.quantity;
+    return sum + (regularPrice - discountedPrice);
+  }, 0);
+
   return (
     <>
       <Header />
@@ -90,7 +101,7 @@ function OrderPlaced() {
                             item.status === "Placed"
                               ? "../../assets/image/icons/Check.svg"
                               : item.status === "Preparing"
-                                ? "../../assets/image/icons/ForkKnife.svg"
+                                ? "../../assets/image/icons/restaurant.png"
                                 : item.status === "Out for Delivery"
                                   ? "../../assets/image/icons/truck.svg"
                                   : item.status === "Delivered"
@@ -98,6 +109,7 @@ function OrderPlaced() {
                                     : ""
                           }
                           alt=""
+                          style={{ width: "22px" }}
                         />
                       </div>
                       <h2>{item.status}</h2>
@@ -197,20 +209,26 @@ function OrderPlaced() {
                   {/* Bill Details */}
                   <div className="bill-details border-top pt-3 mt-3">
                     <p className="d-flex justify-content-between mb-1">
-                      <span>Subtotal</span> <span>₹{totalPrice || 0}</span>
+                      <span>Subtotal</span>
+                      <span>
+                        <del className="text-muted">₹{totalPrice || 0}</del>
+                        <strong className="ms-2">₹{discountPrice || 0}</strong>
+                      </span>
+                    </p>
+                    <p className="d-flex justify-content-between mb-3 text-success">
+                      <span>Discount</span>
+                      <span>-₹{totalDiscount || 0}</span>
                     </p>
                     <p className="d-flex justify-content-between mb-3">
                       <span>Delivery Charges</span> <span>₹30</span>
                     </p>
                     <p className="d-flex justify-content-between mb-1">
-                      <span>Platform Fees</span> <span>₹15</span>
+                      <span>Platform Fees</span> <span>₹5</span>
                     </p>
-                    <p className="d-flex justify-content-between mb-3">
-                      <span>Discount</span> <span>₹{totalDiscount || 0}</span>
-                    </p>
+
                     <h6 className="d-flex justify-content-between fw-bold">
-                      <span>Total Payable</span>{" "}
-                      <span>₹{totalPrice + 15 + 30 - totalDiscount}</span>
+                      <span>Total Payable</span>
+                      <span>₹{discountPrice + 35}</span>
                     </h6>
                   </div>
                 </div>
@@ -231,7 +249,7 @@ function OrderPlaced() {
                           Pay on Delivery
                         </span>
                         <span className="text-danger fw-semibold">
-                          ₹{details?.amount}
+                          ₹{details?.pendingPayment}
                         </span>
                       </div>
                     </div>

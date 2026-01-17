@@ -4,9 +4,10 @@ import { getCategory, getProduct } from "../apiServices/home/homeHttpService";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 import Header from "../homeComponents/header";
 import Footer from "../homeComponents/footer";
 import ProductCard from "./productCard";
@@ -52,71 +53,6 @@ function Products() {
 
   const products = response2?.results?.products || [];
 
-  const SampleNextArrow = ({ onClick, currentSlide, slideCount }) => {
-    const isDisabled = currentSlide >= slideCount - 1;
-    return (
-      <button
-        className={`slide-btn next ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="../assets/image/icons/angle-right.svg" alt="Next" />
-      </button>
-    );
-  };
-  const SamplePrevArrow = ({ onClick, currentSlide }) => {
-    const isDisabled = currentSlide === 0;
-    return (
-      <button
-        className={`slide-btn prev ${isDisabled ? "slick-disabled" : ""}`}
-        onClick={!isDisabled ? onClick : undefined}
-        disabled={isDisabled}
-      >
-        <img src="../assets/image/icons/angle-left.svg" alt="Previous" />
-      </button>
-    );
-  };
-
-  const sliderSettings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    arrows: true,
-    variableWidth: true,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1400,
-        settings: {
-          slidesToShow: 6,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 5,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
   return (
     <>
       <Header />
@@ -151,30 +87,61 @@ function Products() {
                   </div>
                 ))
               ) : (
-                <Slider {...sliderSettings}>
-                  {results?.map((item) => (
-                    <Link
-                      to=""
-                      onClick={() =>
-                        setSubCat(
-                          subCat
-                            ? subCat === item._id
-                              ? ""
-                              : item._id
-                            : item._id
-                        )
-                      }
-                      key={item._id}
-                      className={
-                        subCat === item._id
-                          ? "category-items-tabs-items active"
-                          : "category-items-tabs-items"
-                      }
-                    >
-                      <div>{item.name_en}</div>
-                    </Link>
-                  ))}
-                </Slider>
+                <div className="position-relative">
+                  <Swiper
+                    modules={[Navigation]}
+                    spaceBetween={16}
+                    slidesPerView="auto"
+                    navigation={{
+                      nextEl: ".slide-btn.next",
+                      prevEl: ".slide-btn.prev",
+                    }}
+                    breakpoints={{
+                      320: {
+                        spaceBetween: 10,
+                      },
+                      768: {
+                        spaceBetween: 16,
+                      },
+                    }}
+                  >
+                    {results?.map((item) => (
+                      <SwiperSlide key={item._id}>
+                        <Link
+                          to=""
+                          onClick={() =>
+                            setSubCat(
+                              subCat
+                                ? subCat === item._id
+                                  ? ""
+                                  : item._id
+                                : item._id
+                            )
+                          }
+                          className={
+                            subCat === item._id
+                              ? "category-items-tabs-items active"
+                              : "category-items-tabs-items"
+                          }
+                        >
+                          <div>{item.name_en}</div>
+                        </Link>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                  <button className="slide-btn prev">
+                    <img
+                      src="../assets/image/icons/angle-left.svg"
+                      alt="Previous"
+                    />
+                  </button>
+                  <button className="slide-btn next">
+                    <img
+                      src="../assets/image/icons/angle-right.svg"
+                      alt="Next"
+                    />
+                  </button>
+                </div>
               )}
             </div>
           </div>

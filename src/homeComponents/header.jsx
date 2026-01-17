@@ -112,7 +112,7 @@ function Header() {
           enableHighAccuracy: true,
           timeout: 15000,
           maximumAge: 0,
-        }
+        },
       );
     });
   };
@@ -125,7 +125,7 @@ function Header() {
           headers: {
             "User-Agent": "YourAppName/1.0",
           },
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to fetch address");
@@ -182,27 +182,27 @@ function Header() {
       if (error.message === "GEOLOCATION_NOT_SUPPORTED") {
         showGlobalAlert(
           "Your browser doesn't support location services",
-          "error"
+          "error",
         );
       } else if (error.code === 1) {
         showGlobalAlert(
           "Location access denied. Please enable location permission in your browser settings.",
-          "error"
+          "error",
         );
       } else if (error.code === 2) {
         showGlobalAlert(
           "Unable to determine your location. Please check your device settings.",
-          "error"
+          "error",
         );
       } else if (error.code === 3) {
         showGlobalAlert(
           "Location request timed out. Please try again.",
-          "error"
+          "error",
         );
       } else {
         showGlobalAlert(
           "Unable to detect your location. Please try again or enter manually.",
-          "error"
+          "error",
         );
       }
 
@@ -408,7 +408,7 @@ function Header() {
                                 setLocationData(item.address);
                                 sessionStorage.setItem(
                                   "userLocation",
-                                  JSON.stringify(item.address)
+                                  JSON.stringify(item.address),
                                 );
                               }}
                             >
@@ -651,16 +651,25 @@ function Header() {
               Phone Number <span className="text-danger">*</span>
             </label>
             <Controller
-              className={`form-control border border-2 mb-3 ${
-                errors.phoneNumber ? "input-error" : ""
-              }`}
               name="phoneNumber"
               control={control}
-              rules={{ required: "Phone number is required" }}
+              rules={{
+                required: "Phone number is required",
+                validate: (value) => {
+                  const phoneNumber = value?.phoneNumber || "";
+                  if (phoneNumber.length !== 10) {
+                    return "Phone number must be 10 digits";
+                  }
+                  return true;
+                },
+              }}
               render={({ field }) => (
                 <PhoneInput
                   placeholder="Enter Mobile No."
                   country={"in"}
+                  onlyCountries={["in"]}
+                  disableDropdown={true}
+                  countryCodeEditable={false}
                   inputClass={`form-control ${
                     errors.phoneNumber ? "input-error" : ""
                   }`}
@@ -673,17 +682,14 @@ function Header() {
                   }}
                   value={
                     field?.value?.phoneNumber
-                      ? `${field?.value?.countryCode}${field?.value?.phoneNumber}`
-                      : ""
+                      ? `91${field.value.phoneNumber}`
+                      : "91"
                   }
-                  onChange={(value, countryData) => {
-                    const phoneNumberWithoutCountry = value.slice(
-                      countryData.dialCode.length
-                    );
-
+                  onChange={(value) => {
+                    const phoneNumberWithoutCountry = value.replace(/^91/, "");
                     field.onChange({
                       phoneNumber: phoneNumberWithoutCountry,
-                      countryCode: `+${countryData.dialCode}`,
+                      countryCode: "+91",
                     });
                   }}
                 />
@@ -760,7 +766,7 @@ function Header() {
                   moveOnMax(
                     event,
                     document.getElementById("otp1"),
-                    document.getElementById("otp2")
+                    document.getElementById("otp2"),
                   );
                 }}
                 onInput={(e) => {
@@ -782,7 +788,7 @@ function Header() {
                     event,
                     document.getElementById("otp2"),
                     document.getElementById("otp3"),
-                    document.getElementById("otp1")
+                    document.getElementById("otp1"),
                   );
                 }}
                 onInput={(e) => {
@@ -804,7 +810,7 @@ function Header() {
                     event,
                     document.getElementById("otp3"),
                     document.getElementById("otp4"),
-                    document.getElementById("otp2")
+                    document.getElementById("otp2"),
                   );
                 }}
                 onInput={(e) => {
@@ -826,7 +832,7 @@ function Header() {
                     event,
                     document.getElementById("otp4"),
                     document.getElementById("otp5"),
-                    document.getElementById("otp3")
+                    document.getElementById("otp3"),
                   );
                 }}
                 onInput={(e) => {

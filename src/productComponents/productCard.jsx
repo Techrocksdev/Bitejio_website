@@ -144,7 +144,12 @@ function ProductCard({ item, refetch2, home }) {
                     {itm?.combination?.[0]?.attributeId?.name_en} (
                     {itm?.combination?.[0]?.valueId?.name_en})
                   </div>
-                  <span className="fw-bold">₹{itm.price}</span>
+                  <span>
+                    <del>₹{itm.price}</del>{" "}
+                    <strong className="fw-bold ms-1">
+                      ₹{itm.discountPrice}
+                    </strong>
+                  </span>
                 </label>
               ))}
             </div>

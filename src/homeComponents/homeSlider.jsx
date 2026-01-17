@@ -35,12 +35,8 @@ const BannerSlider = () => {
               <div className="banner-wrapper">
                 <img src="assets/image/banner/banner-2.png" alt="" />
                 <div className="content">
-                  <h1>
-                    Get up to <br />
-                    <span>50%</span>
-                    OFF
-                  </h1>
-                  <p>when you order food worth ₹599 or more</p>
+                  <h1>Free Delivery</h1>
+                  <p>Get Free Delivery On Your First Order.</p>
                   <button className="comman-btn-main">Grab the Offer</button>
                 </div>
               </div>
@@ -50,12 +46,8 @@ const BannerSlider = () => {
               <div className="banner-wrapper">
                 <img src="assets/image/banner/banner-2.png" alt="" />
                 <div className="content">
-                  <h1>
-                    Get up to <br />
-                    <span>50%</span>
-                    OFF
-                  </h1>
-                  <p>when you order food worth ₹599 or more</p>
+                  <h1>Free Delivery</h1>
+                  <p>Get Free Delivery On Your First Order.</p>
                   <button className="comman-btn-main">Grab the Offer</button>
                 </div>
               </div>
@@ -65,12 +57,8 @@ const BannerSlider = () => {
               <div className="banner-wrapper">
                 <img src="assets/image/banner/banner-2.png" alt="" />
                 <div className="content">
-                  <h1>
-                    Get up to <br />
-                    <span>50%</span>
-                    OFF
-                  </h1>
-                  <p>when you order food worth ₹599 or more</p>
+                  <h1>Free Delivery</h1>
+                  <p>Get Free Delivery On Your First Order.</p>
                   <button className="comman-btn-main">Grab the Offer</button>
                 </div>
               </div>
