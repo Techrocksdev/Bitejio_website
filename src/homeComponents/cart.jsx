@@ -140,6 +140,7 @@ function Cart() {
       const response = await createOrder(formData);
       if (!response.error) {
         showGlobalAlert(response.message, "success");
+        refetch();
         navigate(`/order-confirmed/${response.results.order._id}`);
       } else {
         showGlobalAlert(response.message, "error");
@@ -435,7 +436,7 @@ function Cart() {
                           )}
                         </button>
                       </div>
-                      <div className="mt-3">
+                      {/* <div className="mt-3">
                         <div className="secure-payment-card">
                           <div className="d-flex gap-2">
                             <img
@@ -450,7 +451,7 @@ function Cart() {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 )}

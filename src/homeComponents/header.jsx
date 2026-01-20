@@ -645,7 +645,7 @@ function Header() {
               className="mx-auto mb-3"
             />
             <h5 className="mb-3 modal-heading">
-              {type === 2 ? "Sign Up" : "Login"}
+              {type === 2 ? "Sign Up" : "Please Login Or Sign Up First!"}
             </h5>
             <label className="form-label fw-semibold">
               Phone Number <span className="text-danger">*</span>

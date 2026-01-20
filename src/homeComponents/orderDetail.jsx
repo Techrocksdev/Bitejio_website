@@ -149,7 +149,7 @@ function OrderPlaced() {
                           Pay on Delivery
                         </span>
                         <span className="text-danger fw-semibold">
-                          ₹{details?.pendingPayment}
+                          ₹{details?.pendingPayment + 35}
                         </span>
                       </div>
                     </div>

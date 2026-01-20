@@ -14,48 +14,48 @@ function ProductCard({ item, refetch2, home }) {
   const [loader, setLoader] = useState(false);
   const { token, refetch } = useUserAuth();
 
-  const flyToCart = (imageUrl) => {
-    const productImg = document.querySelector(`#product-img-${item._id}`);
-    const cartIcon = document.querySelector(".addToCart");
+  // const flyToCart = (imageUrl) => {
+  //   const productImg = document.querySelector(`#product-img-${item._id}`);
+  //   const cartIcon = document.querySelector(".addToCart");
 
-    if (!productImg || !cartIcon) {
-      console.log("Product image or cart icon not found");
-      return;
-    }
+  //   if (!productImg || !cartIcon) {
+  //     console.log("Product image or cart icon not found");
+  //     return;
+  //   }
 
-    const productRect = productImg.getBoundingClientRect();
-    const cartRect = cartIcon.getBoundingClientRect();
-    const flyingImg = document.createElement("img");
-    flyingImg.src = imageUrl;
-    flyingImg.style.cssText = `
-      position: fixed;
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 8px;
-      z-index: 9999;
-      left: ${productRect.left}px;
-      top: ${productRect.top}px;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    `;
+  //   const productRect = productImg.getBoundingClientRect();
+  //   const cartRect = cartIcon.getBoundingClientRect();
+  //   const flyingImg = document.createElement("img");
+  //   flyingImg.src = imageUrl;
+  //   flyingImg.style.cssText = `
+  //     position: fixed;
+  //     width: 80px;
+  //     height: 80px;
+  //     object-fit: cover;
+  //     border-radius: 8px;
+  //     z-index: 9999;
+  //     left: ${productRect.left}px;
+  //     top: ${productRect.top}px;
+  //     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  //     pointer-events: none;
+  //     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  //   `;
 
-    document.body.appendChild(flyingImg);
+  //   document.body.appendChild(flyingImg);
 
-    setTimeout(() => {
-      flyingImg.style.left = `${cartRect.left}px`;
-      flyingImg.style.top = `${cartRect.top}px`;
-      flyingImg.style.width = "40px";
-      flyingImg.style.height = "40px";
-      flyingImg.style.opacity = "0";
-    }, 50);
-    setTimeout(() => {
-      if (document.body.contains(flyingImg)) {
-        document.body.removeChild(flyingImg);
-      }
-    }, 900);
-  };
+  //   setTimeout(() => {
+  //     flyingImg.style.left = `${cartRect.left}px`;
+  //     flyingImg.style.top = `${cartRect.top}px`;
+  //     flyingImg.style.width = "40px";
+  //     flyingImg.style.height = "40px";
+  //     flyingImg.style.opacity = "0";
+  //   }, 50);
+  //   setTimeout(() => {
+  //     if (document.body.contains(flyingImg)) {
+  //       document.body.removeChild(flyingImg);
+  //     }
+  //   }, 900);
+  // };
 
   const addCart = async () => {
     if (!variantId) {
@@ -75,7 +75,12 @@ function ProductCard({ item, refetch2, home }) {
           .querySelector(`#cartModal${item._id} [data-bs-dismiss="modal"]`)
           .click();
         showGlobalAlert(response.message, "success");
-        await Promise.all([refetch(), refetch2()]);
+        Promise.all([refetch(), refetch2()]);
+      } else if (
+        response.error &&
+        response.message === "Can't add product from different merchant"
+      ) {
+        document.getElementById("warnClick").click();
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -277,6 +282,57 @@ function ProductCard({ item, refetch2, home }) {
       </div>
 
       {createPortal(modalContent, document.body)}
+
+      <div
+        className="modal fade logoutmodal"
+        id="Warn"
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="paymentmodal_main text-center">
+                <div className="payment_head mb-3 mt-1">
+                  <h2>Oops!</h2>
+                  <p>
+                    Your cart already contains items from a different merchant.
+                    To add this item, you’ll need to clear your existing cart.
+                  </p>
+                </div>
+                <div className="row justify-content-center mb-2">
+                  <div className="col-auto">
+                    <button
+                      className="comman-btn-main"
+                      onClick={() => addCart()}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                  <div className="col-auto">
+                    <Link
+                      className="comman-btn-main white"
+                      data-bs-dismiss="modal"
+                      to=""
+                      onClick={() => setVariantId("")}
+                    >
+                      Cancel
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="d-none"
+        id="warnClick"
+        data-bs-toggle="modal"
+        data-bs-target="#Warn"
+      ></div>
     </>
   );
 }

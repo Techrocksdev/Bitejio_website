@@ -1,10 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useUserAuth } from "../commonComponents/authContext";
 import FixedCartStrip from "../commonComponents/strip";
 
 function Footer() {
   const { profile, token } = useUserAuth();
+  const location = useLocation();
+
   return (
     <>
       <footer className="footer">
@@ -33,6 +35,14 @@ function Footer() {
                         src="../../assets/image/icons/instagram.svg"
                         alt=""
                       />
+                    </Link>
+                    <Link
+                      to="https://www.facebook.com/people/Bitezioin/61586328885441/?rdid=GnEY11T06bx1kIKS&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1G8fEYS77v%2F%3Fref%3D1"
+                      className="social-item wow animate__animated animate__bounceIn"
+                      data-wow-delay="0.2s"
+                      target="_blank"
+                    >
+                      <img src="../../assets/image/icons/facebook.svg" alt="" />
                     </Link>
                   </div>
                 </div>
@@ -106,7 +116,11 @@ function Footer() {
           <div className="footer-copy-right">© 2025 Bitezio Pvt ltd</div>
         </div>
       </footer>
-      {token ? <FixedCartStrip cartCount={profile?.cartCount} /> : ""}
+      {token &&
+      !location.pathname.includes("/cart") &&
+      !location.pathname.includes("/order-confirmed") ? (
+        <FixedCartStrip cartCount={profile?.cartCount} />
+      ) : null}
     </>
   );
 }
