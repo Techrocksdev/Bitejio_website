@@ -42,7 +42,7 @@ function ProductDetails() {
     onError: (error) => {
       console.log(error);
     },
-    select: (data) => data.results.product[0],
+    select: (data) => data.results.product,
   });
   console.log(details);
 
@@ -254,7 +254,7 @@ function ProductDetails() {
                     </p>
                   </div>
                 </div>
-                <div className="col-12 col-md-6">
+                {/* <div className="col-12 col-md-6">
                   <div className="d-flex gap-4 flex-wrap align-items-center justify-content-md-end">
                     <div className="d-flex gap-2 align-items-center">
                       <img
@@ -268,7 +268,7 @@ function ProductDetails() {
                       <p className="text text-dark m-0">Favorite</p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="mt-4">
                 <div className="row justify-content-md-between">
@@ -311,7 +311,7 @@ function ProductDetails() {
                               ((details.variant.price -
                                 details.variant.discountPrice) /
                                 details.variant.price) *
-                                100
+                                100,
                             )}
                             % OFF
                           </div>

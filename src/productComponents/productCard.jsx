@@ -74,13 +74,21 @@ function ProductCard({ item, refetch2, home }) {
         document
           .querySelector(`#cartModal${item._id} [data-bs-dismiss="modal"]`)
           .click();
+        setVariantId("");
         showGlobalAlert(response.message, "success");
         Promise.all([refetch(), refetch2()]);
       } else if (
         response.error &&
         response.message === "Can't add product from different merchant"
       ) {
-        document.getElementById("warnClick").click();
+        const modalElement = document.getElementById(`cartModal${item._id}`);
+        const modal = window.bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+          modal.hide();
+        }
+        setTimeout(() => {
+          document.getElementById("warnClick").click();
+        }, 300);
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -91,6 +99,7 @@ function ProductCard({ item, refetch2, home }) {
       setLoader(false);
     }
   };
+
   const updateQuantity = async (item, change, e) => {
     e.preventDefault();
 
@@ -117,7 +126,8 @@ function ProductCard({ item, refetch2, home }) {
       console.log("An error occurred");
     }
   };
-  const modalContent = (
+
+  const cartModalContent = (
     <div
       className="modal fade"
       id={`cartModal${item?._id}`}
@@ -160,11 +170,7 @@ function ProductCard({ item, refetch2, home }) {
             </div>
 
             <div className="d-flex justify-content-end gap-2 mt-4">
-              <button
-                className="btn btn-light border"
-                data-bs-dismiss="modal"
-                onClick={() => setVariantId("")}
-              >
+              <button className="btn btn-light border" data-bs-dismiss="modal">
                 Cancel
               </button>
               <button
@@ -187,6 +193,49 @@ function ProductCard({ item, refetch2, home }) {
                   "Add to Cart"
                 )}
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const warnModalContent = (
+    <div
+      className="modal fade logoutmodal"
+      id="Warn"
+      tabIndex={-1}
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-body">
+            <div className="paymentmodal_main text-center">
+              <div className="payment_head mb-3 mt-1">
+                <h2>Oops!</h2>
+                <p>
+                  Your cart already contains items from a different merchant. To
+                  add this item, you'll need to clear your existing cart.
+                </p>
+              </div>
+              <div className="row justify-content-center mb-2">
+                <div className="col-auto">
+                  <button className="comman-btn-main" onClick={() => addCart()}>
+                    Add to Cart
+                  </button>
+                </div>
+                <div className="col-auto">
+                  <Link
+                    className="comman-btn-main white"
+                    data-bs-dismiss="modal"
+                    to=""
+                    onClick={() => setVariantId("")}
+                  >
+                    Cancel
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -281,51 +330,8 @@ function ProductCard({ item, refetch2, home }) {
         </div>
       </div>
 
-      {createPortal(modalContent, document.body)}
-
-      <div
-        className="modal fade logoutmodal"
-        id="Warn"
-        tabIndex={-1}
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-body">
-              <div className="paymentmodal_main text-center">
-                <div className="payment_head mb-3 mt-1">
-                  <h2>Oops!</h2>
-                  <p>
-                    Your cart already contains items from a different merchant.
-                    To add this item, you’ll need to clear your existing cart.
-                  </p>
-                </div>
-                <div className="row justify-content-center mb-2">
-                  <div className="col-auto">
-                    <button
-                      className="comman-btn-main"
-                      onClick={() => addCart()}
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                  <div className="col-auto">
-                    <Link
-                      className="comman-btn-main white"
-                      data-bs-dismiss="modal"
-                      to=""
-                      onClick={() => setVariantId("")}
-                    >
-                      Cancel
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {createPortal(cartModalContent, document.body)}
+      {createPortal(warnModalContent, document.body)}
 
       <div
         className="d-none"

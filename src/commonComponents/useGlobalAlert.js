@@ -2,8 +2,6 @@ import { toast } from "react-toastify";
 import { Slide } from "react-toastify";
 
 export const showGlobalAlert = (message, type = "success", options = {}) => {
-  toast.dismiss();
-
   const toastId = "single-toast-id";
 
   const defaultOptions = {
@@ -16,7 +14,7 @@ export const showGlobalAlert = (message, type = "success", options = {}) => {
     progress: undefined,
     theme: "dark",
     transition: Slide,
-    toastId,
+    toastId: toastId,
     ...options,
   };
 

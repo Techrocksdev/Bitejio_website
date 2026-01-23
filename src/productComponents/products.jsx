@@ -41,7 +41,8 @@ function Products() {
       const formData = {
         page: 1,
         pageSize: 1000,
-        categoryId: subCat ? subCat : id,
+        categoryId: id,
+        subCategory: subCat,
         search: "",
       };
       return getProduct(formData);
@@ -115,7 +116,7 @@ function Products() {
                                 ? subCat === item._id
                                   ? ""
                                   : item._id
-                                : item._id
+                                : item._id,
                             )
                           }
                           className={

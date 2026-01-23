@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Header from "./header";
 import Category from "./category";
 import Footer from "./footer";
@@ -59,13 +59,18 @@ function Home() {
 
   const newProducts = response2?.results?.products || [];
 
+  const divOneRef = useRef(null);
+
+  const scrollToDivOne = () => {
+    divOneRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <>
       <Header />
       <BannerSlider />
       <Category />
       <SubCategory />
-      <section className="most-popular">
+      <section className="most-popular" ref={divOneRef}>
         <div className="container comman-spacing-top-bottom">
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="heading">Most Popular</h2>
@@ -257,7 +262,10 @@ function Home() {
                   your hunger with the best cuisines in town.
                 </p>
                 <button className="comman-btn-white">
-                  <div className="d-flex gap-2 align-items-center">
+                  <div
+                    className="d-flex gap-2 align-items-center"
+                    onClick={scrollToDivOne}
+                  >
                     <img src="assets/image/icons/knif-spoon.svg" alt="" />
                     Order Now
                   </div>

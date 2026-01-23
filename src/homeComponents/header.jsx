@@ -221,7 +221,7 @@ function Header() {
       const response = await sendOtpSignup(data);
       console.log(response);
       if (!response.error) {
-        showGlobalAlert(`Your OTP is: ${response.results.otp}`, "success");
+        showGlobalAlert(response.message, "success");
         document.getElementById("closeModal").click();
         document.getElementById("otpModalOpen").click();
       } else {
@@ -286,7 +286,7 @@ function Header() {
     try {
       const response = await sendOtpSignup(formData);
       if (!response.error) {
-        showGlobalAlert(`Your OTP is: ${response.results.otp}`, "success");
+        showGlobalAlert(response.message, "success");
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -430,7 +430,7 @@ function Header() {
                   {location.pathname.includes("/search") ? (
                     <input
                       type="text"
-                      placeholder="Discover restaurants, cuisines, or dishes"
+                      placeholder="Discover cuisines or dishes"
                       id="search"
                       ref={inputRef}
                       onChange={(e) => {
@@ -751,7 +751,7 @@ function Header() {
             />
             <h5 className="mb-3 modal-heading">
               {" "}
-              Enter the 6-digit OTP sent to your email.
+              Enter the OTP Sent to Your Mobile Number.
             </h5>
             <div className="d-flex justify-content-center mb-4">
               <input

@@ -191,10 +191,10 @@
 
 .banner-wrapper .content p {
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 109.00000000000001%;
   letter-spacing: 0%;
-  color: var(--text-light);
+  color: #ffffff;
 }
 
 .dot-wrapper {

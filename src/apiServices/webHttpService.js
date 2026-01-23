@@ -1,4 +1,5 @@
 import axios from "axios";
+import { showGlobalAlert } from "../commonComponents/useGlobalAlert";
 
 const api = axios.create();
 
@@ -13,7 +14,7 @@ api.interceptors.request.use(
 
     return req;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 const errorCallBack = (error) => {
@@ -22,6 +23,10 @@ const errorCallBack = (error) => {
 
   if (!isExpectedError) {
     console.error("Unexpected error:", error);
+  }
+  if (error.response?.status === 500) {
+    showGlobalAlert("Something went wrong", "error");
+    return;
   }
 
   if (error.response?.status === 401) {
