@@ -153,8 +153,11 @@ function Orders() {
                                 <div className="d-flex align-items-center justify-content-between flex-wrap">
                                   <div>
                                     <div className="d-flex gap-3 align-items-center flex-wrap">
-                                      <h2 className="fs-6 fw-medium m-0">
-                                        Order Ongoing,
+                                      <h2
+                                        className="fs-6 fw-medium m-0"
+                                        style={{ color: "#27ae60" }}
+                                      >
+                                        {item.status}
                                       </h2>
                                       <p className="fs-6 fw-normal text-main m-0">
                                         Estimated Delivery:{" "}
@@ -197,13 +200,16 @@ function Orders() {
                                       >
                                         <div className="cart-item d-flex align-items-center justify-content-between mb-3">
                                           <div className="d-flex align-items-center gap-2">
-                                            <div className="cart-img">
+                                            <Link
+                                              to={`/product-details/${i?.productId?._id}`}
+                                              className="cart-img"
+                                            >
                                               <img
                                                 src={i?.productId?.images?.[0]}
                                                 className="rounded"
                                                 alt={i?.productId?.images?.[0]}
                                               />
-                                            </div>
+                                            </Link>
                                             <div>
                                               <h6 className="product-heading">
                                                 {i.productId?.name_en}
@@ -237,12 +243,15 @@ function Orders() {
                                   <div className="d-flex align-items-center justify-content-between flex-wrap">
                                     <div>
                                       <div className="d-flex gap-3 align-items-center flex-wrap">
-                                        <h2 className="fs-6 fw-medium m-0">
-                                          Order Ongoing,
+                                        <h2
+                                          className="fs-6 fw-medium m-0"
+                                          style={{ color: "#27ae60" }}
+                                        >
+                                          {item.status}
                                         </h2>
                                         <p className="text m-0">
                                           {moment(
-                                            item?.tracking?.[3]?.date
+                                            item?.tracking?.[3]?.date,
                                           ).format("DD MMM YYYY, hh:mm A")}
                                         </p>
                                       </div>
@@ -280,7 +289,10 @@ function Orders() {
                                         >
                                           <div className="cart-item d-flex align-items-center justify-content-between mb-3">
                                             <div className="d-flex align-items-center gap-2">
-                                              <div className="cart-img">
+                                              <Link
+                                                to={`/product-details/${i?.productId?._id}`}
+                                                className="cart-img"
+                                              >
                                                 <img
                                                   src={
                                                     i?.productId?.images?.[0]
@@ -290,7 +302,7 @@ function Orders() {
                                                     i?.productId?.images?.[0]
                                                   }
                                                 />
-                                              </div>
+                                              </Link>
                                               <div>
                                                 <h6 className="product-heading">
                                                   {i.productId?.name_en}

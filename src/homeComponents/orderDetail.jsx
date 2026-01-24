@@ -230,38 +230,48 @@ function OrderPlaced() {
                   {isLoading ? (
                     ""
                   ) : (
-                    <div className="mt-4">
-                      <h2 className="heading mb-3 fs-5">Order Status</h2>
-                      {details?.products?.[0]?.tracking?.map((item) => (
-                        <div
-                          key={item._id}
-                          className={
-                            item.is_active
-                              ? "items-check-points active-points active"
-                              : "items-check-points"
-                          }
-                        >
-                          <div className="icon">
-                            <img
-                              src={
-                                item.status === "Placed"
-                                  ? "../../assets/image/icons/Check.svg"
-                                  : item.status === "Preparing"
-                                    ? "../../assets/image/icons/restaurant.png"
-                                    : item.status === "Out for Delivery"
-                                      ? "../../assets/image/icons/truck.svg"
-                                      : item.status === "Delivered"
-                                        ? "../../assets/image/icons/home.svg"
-                                        : ""
-                              }
-                              alt=""
-                              style={{ width: "22px" }}
-                            />
+                    <>
+                      <div className="mt-4">
+                        <h2 className="heading mb-3 fs-5">Order Status</h2>
+                        {details?.products?.[0]?.tracking?.map((item) => (
+                          <div
+                            key={item._id}
+                            className={
+                              item.is_active
+                                ? "items-check-points active-points active"
+                                : "items-check-points"
+                            }
+                          >
+                            <div className="icon">
+                              <img
+                                src={
+                                  item.status === "Placed"
+                                    ? "../../assets/image/icons/Check.svg"
+                                    : item.status === "Preparing"
+                                      ? "../../assets/image/icons/restaurant.png"
+                                      : item.status === "Out for Delivery"
+                                        ? "../../assets/image/icons/truck.svg"
+                                        : item.status === "Delivered"
+                                          ? "../../assets/image/icons/home.svg"
+                                          : ""
+                                }
+                                alt=""
+                                style={{ width: "22px" }}
+                              />
+                            </div>
+                            <h2>{item.status}</h2>
                           </div>
-                          <h2>{item.status}</h2>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                      <a
+                        href={details?.invoice}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text text-white comman-btn-main"
+                      >
+                        Download Invoice
+                      </a>
+                    </>
                   )}
                 </div>
               </div>

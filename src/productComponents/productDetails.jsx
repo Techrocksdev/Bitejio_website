@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "../homeComponents/header";
 import Footer from "../homeComponents/footer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   addToCart,
@@ -71,9 +71,10 @@ function ProductDetails() {
       const response = await addToCart(formData);
       if (!response.error) {
         document.querySelector(`#cartModal [data-bs-dismiss="modal"]`).click();
+        document.getElementById(`closeWarn`)?.click();
+        setVariantId("");
         showGlobalAlert(response.message, "success");
-        refetch1();
-        refetch();
+        Promise.all([refetch1(), refetch()]);
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -249,8 +250,7 @@ function ProductDetails() {
                 <div className="col-12 col-md-6">
                   <div className="d-flex gap-2 flex-wrap align-items-center ">
                     <p className="text text-dark m-0">
-                      <span className="text-danger">Open Now</span> - 10:00 am -
-                      11:00 pm
+                      <strong className="text-danger">Open Now</strong>
                     </p>
                   </div>
                 </div>
@@ -608,34 +608,108 @@ function ProductDetails() {
                 <button
                   className="btn btn-light border"
                   data-bs-dismiss="modal"
+                  onClick={() => setVariantId("")}
                 >
                   Cancel
                 </button>
-                <button
-                  className="comman-btn-main"
-                  onClick={() => addCart()}
-                  disabled={loader}
-                >
-                  {loader ? (
-                    <>
-                      <span className="me-2">Wait...</span>
-                      <RotatingLines
-                        strokeColor="white"
-                        strokeWidth="5"
-                        animationDuration="0.75"
-                        width="20"
-                        visible={true}
-                      />
-                    </>
-                  ) : (
-                    "Add to Cart"
-                  )}
-                </button>
+                {details?.hasDifferentMerchantInCart ? (
+                  <button
+                    className="comman-btn-main"
+                    onClick={() => {
+                      if (!variantId) {
+                        showGlobalAlert("Please select combination", "error");
+                        return;
+                      }
+                      document.getElementById(`warnClick`).click();
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                ) : (
+                  <button
+                    className="comman-btn-main"
+                    onClick={() => addCart()}
+                    disabled={loader}
+                  >
+                    {loader ? (
+                      <>
+                        <span className="me-2">Wait...</span>
+                        <RotatingLines
+                          strokeColor="white"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="20"
+                          visible={true}
+                        />
+                      </>
+                    ) : (
+                      "Add to Cart"
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div
+        className="modal fade logoutmodal"
+        id={`Warn`}
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="paymentmodal_main text-center">
+                <div className="payment_head mb-3 mt-1">
+                  <h2>Oops!</h2>
+                  <p>
+                    Your cart already contains items from a different merchant.
+                    To add this item, you'll need to clear your existing cart.
+                  </p>
+                </div>
+                <div className="row justify-content-center mb-2">
+                  <div className="col-auto">
+                    <button
+                      className="comman-btn-main"
+                      onClick={() => addCart()}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                  <div className="col-auto">
+                    <Link
+                      id={`closeWarn`}
+                      className="comman-btn-main white"
+                      data-bs-dismiss="modal"
+                      to=""
+                      onClick={() => {
+                        const cartModalEl =
+                          document.getElementById(`cartModal`);
+                        const cartModal =
+                          window.bootstrap?.Modal?.getInstance(cartModalEl);
+                        if (cartModal) cartModal.hide();
+                        setVariantId("");
+                      }}
+                    >
+                      Cancel
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="d-none"
+        id={`warnClick`}
+        data-bs-toggle="modal"
+        data-bs-target={`#Warn`}
+      ></div>
     </>
   );
 }

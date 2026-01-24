@@ -42,7 +42,7 @@ function Products() {
         page: 1,
         pageSize: 1000,
         categoryId: id,
-        subCategory: subCat,
+        subCategoryId: subCat,
         search: "",
       };
       return getProduct(formData);

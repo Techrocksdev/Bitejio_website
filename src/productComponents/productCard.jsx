@@ -74,21 +74,10 @@ function ProductCard({ item, refetch2, home }) {
         document
           .querySelector(`#cartModal${item._id} [data-bs-dismiss="modal"]`)
           .click();
+        document.getElementById(`closeWarn${item._id}`)?.click();
         setVariantId("");
         showGlobalAlert(response.message, "success");
         Promise.all([refetch(), refetch2()]);
-      } else if (
-        response.error &&
-        response.message === "Can't add product from different merchant"
-      ) {
-        const modalElement = document.getElementById(`cartModal${item._id}`);
-        const modal = window.bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-          modal.hide();
-        }
-        setTimeout(() => {
-          document.getElementById("warnClick").click();
-        }, 300);
       } else {
         showGlobalAlert(response.message, "error");
       }
@@ -152,7 +141,7 @@ function ProductCard({ item, refetch2, home }) {
                     <input
                       className="form-check-input me-2"
                       type="radio"
-                      name={itm._id}
+                      name={`variant-${item._id}`}
                       onChange={() => setVariantId(itm._id)}
                       checked={variantId === itm._id}
                     />
@@ -170,29 +159,48 @@ function ProductCard({ item, refetch2, home }) {
             </div>
 
             <div className="d-flex justify-content-end gap-2 mt-4">
-              <button className="btn btn-light border" data-bs-dismiss="modal">
+              <button
+                className="btn btn-light border"
+                data-bs-dismiss="modal"
+                onClick={() => setVariantId("")}
+              >
                 Cancel
               </button>
-              <button
-                className="comman-btn-main"
-                onClick={() => addCart()}
-                disabled={loader}
-              >
-                {loader ? (
-                  <>
-                    <span className="me-2">Wait...</span>
-                    <RotatingLines
-                      strokeColor="white"
-                      strokeWidth="5"
-                      animationDuration="0.75"
-                      width="20"
-                      visible={true}
-                    />
-                  </>
-                ) : (
-                  "Add to Cart"
-                )}
-              </button>
+              {item.hasDifferentMerchantInCart ? (
+                <button
+                  className="comman-btn-main"
+                  onClick={() => {
+                    if (!variantId) {
+                      showGlobalAlert("Please select combination", "error");
+                      return;
+                    }
+                    document.getElementById(`warnClick${item._id}`).click();
+                  }}
+                >
+                  Add to Cart
+                </button>
+              ) : (
+                <button
+                  className="comman-btn-main"
+                  onClick={() => addCart()}
+                  disabled={loader}
+                >
+                  {loader ? (
+                    <>
+                      <span className="me-2">Wait...</span>
+                      <RotatingLines
+                        strokeColor="white"
+                        strokeWidth="5"
+                        animationDuration="0.75"
+                        width="20"
+                        visible={true}
+                      />
+                    </>
+                  ) : (
+                    "Add to Cart"
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -203,7 +211,7 @@ function ProductCard({ item, refetch2, home }) {
   const warnModalContent = (
     <div
       className="modal fade logoutmodal"
-      id="Warn"
+      id={`Warn${item._id}`}
       tabIndex={-1}
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
@@ -227,10 +235,19 @@ function ProductCard({ item, refetch2, home }) {
                 </div>
                 <div className="col-auto">
                   <Link
+                    id={`closeWarn${item._id}`}
                     className="comman-btn-main white"
                     data-bs-dismiss="modal"
                     to=""
-                    onClick={() => setVariantId("")}
+                    onClick={() => {
+                      const cartModalEl = document.getElementById(
+                        `cartModal${item._id}`,
+                      );
+                      const cartModal =
+                        window.bootstrap?.Modal?.getInstance(cartModalEl);
+                      if (cartModal) cartModal.hide();
+                      setVariantId("");
+                    }}
                   >
                     Cancel
                   </Link>
@@ -335,9 +352,9 @@ function ProductCard({ item, refetch2, home }) {
 
       <div
         className="d-none"
-        id="warnClick"
+        id={`warnClick${item._id}`}
         data-bs-toggle="modal"
-        data-bs-target="#Warn"
+        data-bs-target={`#Warn${item._id}`}
       ></div>
     </>
   );

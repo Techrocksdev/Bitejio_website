@@ -204,13 +204,16 @@ function Cart() {
                             className="cart-item d-flex align-items-center justify-content-between mb-3"
                           >
                             <div className="col-12 col-md-7 col-lg-6 d-flex align-items-center gap-2">
-                              <div className="cart-img">
+                              <Link
+                                className="cart-img"
+                                to={`/product-details/${item?.productId?._id}`}
+                              >
                                 <img
                                   src={item?.productId?.images?.[0]}
                                   className="rounded"
                                   alt={item?.productId?.images?.[0]}
                                 />
-                              </div>
+                              </Link>
                               <div>
                                 <h6 className="product-heading">
                                   {item.productId.name_en}

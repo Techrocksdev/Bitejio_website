@@ -53,7 +53,7 @@ function OrderPlaced() {
       />
 
       <section className="order-confirmed-bg">
-        <div className="container comman-spacing-top-bottom">
+        <div className="container comman-spacing-top-bottom pb-0">
           <div className="order-confirmed-bg-wrapper">
             <div className="confirm-message">
               <img
@@ -67,8 +67,16 @@ function OrderPlaced() {
               </div>
             </div>
           </div>
-          <div className>
-            <Link to="/" className="text text-white comman-btn-main">
+          <div className="row mt-3">
+            <a
+              href={details?.invoice}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text text-white comman-btn-main w-auto"
+            >
+              Download Invoice
+            </a>
+            <Link to="/" className="text text-white comman-btn-main ms-3">
               Go Back
             </Link>
           </div>
@@ -178,13 +186,16 @@ function OrderPlaced() {
                       className="cart-item d-flex align-items-center justify-content-between"
                     >
                       <div className="d-flex align-items-center gap-2">
-                        <div className="cart-img">
+                        <Link
+                          className="cart-img"
+                          to={`/product-details/${item?.productId?._id}`}
+                        >
                           <img
                             src={item?.productId?.images?.[0]}
                             className="rounded"
                             alt={item?.productId?.images?.[0]}
                           />
-                        </div>
+                        </Link>
                         <div>
                           <h6 className="product-heading">
                             {" "}

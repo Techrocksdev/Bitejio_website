@@ -455,7 +455,7 @@ function Header() {
                   ) : (
                     <input
                       type="text"
-                      placeholder="Discover restaurants, cuisines, or dishes"
+                      placeholder="Discover cuisines or dishes"
                       id="search"
                       ref={inputRef}
                       onClick={() => navigate("/search")}
