@@ -132,29 +132,7 @@ function OrderPlaced() {
                     </h6>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <h2 className="heading fs-6 font-medium">Payment Details</h2>
-                  <div className="mt-3">
-                    <div className="paid-card">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="text-success fw-normal">
-                          Paid Online
-                        </span>
-                        <span className="text-success fw-semibold">
-                          ₹{details?.paidAmount}
-                        </span>
-                      </div>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="text-danger fw-normal">
-                          Pay on Delivery
-                        </span>
-                        <span className="text-danger fw-semibold">
-                          ₹{details?.pendingPayment + 35}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
                 <div className="mt-4">
                   <h2 className="heading fs-6 font-medium">Delivery Address</h2>
                   <p className="text">
